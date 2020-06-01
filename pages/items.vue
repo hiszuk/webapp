@@ -5,9 +5,18 @@
         <div></div>
       </el-col>
       <el-col :span="20">
+        <el-input v-model="search" size="small" placeholder="検索文字列を入力">
+          <template slot="prepend">内容を検索する</template>
+        </el-input>
         <el-table
           ref="itemTable"
-          :data="tableData"
+          :data="
+            tableData.filter(
+              (data) =>
+                !search ||
+                data.content.toLowerCase().includes(search.toLowerCase())
+            )
+          "
           height="300"
           style="width: 100%"
         >
@@ -133,7 +142,8 @@ export default {
             'フロントエンド・バックエンド・DBの3層をひとつのパッケージにまとめる',
           status: 'TODO'
         }
-      ]
+      ],
+      search: ''
     }
   },
   methods: {
