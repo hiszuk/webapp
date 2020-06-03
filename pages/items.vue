@@ -121,18 +121,24 @@ export default {
       formLabelWidth: '150px',
       dialogFormVisible: false,
       disableID: true,
+      rowNumber: '',
       form: {
         id: null,
         title: '',
         content: '',
-        status: 'TODO'
+        status: ''
       }
     }
   },
   methods: {
     handleEdit(index, row) {
       this.disableID = true
-      this.form = row
+      this.rowNumber = index
+      // ToDo: 本来はREST APIのkey(row.id)検索し結果をformにセットする
+      this.form.id = row.id
+      this.form.title = row.title
+      this.form.content = row.content
+      this.form.status = row.status
       this.dialogFormVisible = true
     },
     handleDelete(index, row) {
@@ -141,7 +147,11 @@ export default {
     doConfirm() {
       this.dialogFormVisible = false
       const target = `${this.form.id}:${this.form.title}`
-      // ToDo: REST APIのアップデートを起動する
+      // ToDo: 本来はREST APIのアップデートを起動する
+      const row = this.$refs.itemTable.data[this.rowNumber]
+      row.title = this.form.title
+      row.content = this.form.content
+      row.status = this.form.status
       this.$message({
         type: 'success',
         message: `${target} : 更新が成功しました。`,
