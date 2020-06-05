@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <title>概要</title>
+        <style>
+</style>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/katex.min.css" integrity="sha384-yFRtMMDnQtDRO8rLpMIKrtPCD5jdktao2TV19YiZYWMDkUR5GQZR/NOVTdquEx1j" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/markdown.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/highlight.css">
+        <link href="https://cdn.jsdelivr.net/npm/katex-copytex@latest/dist/katex-copytex.min.css" rel="stylesheet" type="text/css">
+        <style>
+.task-list-item { list-style-type: none; } .task-list-item-checkbox { margin-left: -20px; vertical-align: middle; }
+</style>
+        <style>
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe WPC', 'Segoe UI', 'Ubuntu', 'Droid Sans', sans-serif;
+                font-size: 14px;
+                line-height: 1.6;
+            }
+        </style>
+        
+        <script src="https://cdn.jsdelivr.net/npm/katex-copytex@latest/dist/katex-copytex.min.js"></script>
+        
+    </head>
+    <body class="vscode-light">
+        <h2 id="概要">概要</h2>
+<ul>
+<li><a href="#%E6%A6%82%E8%A6%81">概要</a></li>
+<li><a href="#%E3%83%97%E3%83%AD%E3%82%B8%E3%82%A7%E3%82%AF%E3%83%88%E4%BD%9C%E6%88%90">プロジェクト作成</a>
+<ul>
+<li><a href="#%E8%B5%B7%E5%8B%95%E3%81%99%E3%82%8B">起動する</a></li>
+</ul>
+</li>
+<li><a href="#nuxt%E3%81%AE%E8%A7%A3%E8%AA%AC">NUXTの解説</a>
+<ul>
+<li><a href="#nuxt%E3%81%AE%E3%83%95%E3%82%A9%E3%83%AB%E3%83%80%E6%A7%8B%E6%88%90%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6">NUXTのフォルダ構成について</a></li>
+<li><a href="#%E7%94%BB%E9%9D%A2%E6%A7%8B%E6%88%90%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6">画面構成について</a></li>
+<li><a href="#vue%E3%81%AE%E6%A7%8B%E6%88%90%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6">Vueの構成について</a></li>
+<li><a href="#%E3%83%AA%E3%82%A2%E3%82%AF%E3%83%86%E3%82%A3%E3%83%96%E3%81%A8%E3%81%AF">リアクティブとは？</a></li>
+</ul>
+</li>
+<li><a href="#%E6%AC%A1%E5%9B%9E%E4%BB%A5%E9%99%8D%E3%81%AE%E6%BA%96%E5%82%99">次回以降の準備</a>
+<ul>
+<li><a href="#%E5%AE%9F%E7%BF%92%E7%94%A8%E3%83%9A%E3%83%BC%E3%82%B8%E3%81%AE%E8%BF%BD%E5%8A%A0">実習用ページの追加</a></li>
+<li><a href="#%E3%83%A1%E3%83%8B%E3%83%A5%E3%83%BC%E3%81%AE%E8%BF%BD%E5%8A%A0">メニューの追加</a></li>
+</ul>
+</li>
+<li><a href="#webapp-%E3%82%BD%E3%83%BC%E3%82%B9%E3%81%AE%E5%8F%96%E5%BE%97">webapp ソースの取得</a>
+<ul>
+<li><a href="#history%E3%81%8B%E3%82%89%E3%82%BD%E3%83%BC%E3%82%B9%E3%82%92%E5%8F%96%E5%BE%97">historyからソースを取得</a></li>
+<li><a href="#git-hub-%E3%81%8B%E3%82%89%E3%82%BD%E3%83%BC%E3%82%B9%E3%82%92%E5%8F%96%E5%BE%97">git hub からソースを取得</a></li>
+<li><a href="#%E3%83%A2%E3%82%B8%E3%83%A5%E3%83%BC%E3%83%AB%E3%83%80%E3%82%A6%E3%83%B3%E3%83%AD%E3%83%BC%E3%83%89">モジュールダウンロード</a></li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="プロジェクト作成">プロジェクト作成</h2>
+<p>作業ディレクトリで下記のように入力します。</p>
+<pre><code><code><div>CMD&gt; npx create-nuxt-app webapp
+</div></code></code></pre>
+<p>いくつかの質問に答えていきます。</p>
+<ul>
+<li>programming language: <strong>JavaScript</strong></li>
+<li>package manager: <strong>Yarn</strong></li>
+<li>I framework: <strong>Element</strong></li>
+<li>Nuxt.js modules: <strong>Axios</strong></li>
+<li>rendering mode: <strong>Single Page App</strong></li>
+</ul>
+<pre><code><code><div>create-nuxt-app v2.15.0
+✨  Generating Nuxt.js project in webapp
+? Project name webapp
+? Project description My first NUXT
+? Author name Hisakazu KATO
+? Choose programming language JavaScript
+? Choose the package manager Yarn
+? Choose UI framework Element
+? Choose custom server framework None (Recommended)
+? Choose Nuxt.js modules Axios
+? Choose linting tools ESLint, Prettier
+? Choose test framework None
+? Choose rendering mode Single Page App
+? Choose development tools jsconfig.json (Recommended for VS Code)
+</div></code></code></pre>
+<p>プロジェクトが作成されました。<br/></p>
+<h3 id="起動する">起動する</h3>
+<p>早速起動してみます。<br/>
+webappのディレクトリに移動して、yarn dev で起動します。</p>
+<pre><code><code><div>CMD&gt; cd webapp
+CMD&gt; yarn dev
+</div></code></code></pre>
+<pre><code><code><div>    :
+    :
+i Listening on: http://localhost:3000/   
+</div></code></code></pre>
+<p>Listening on ... と表示されれば、起動は完了です。<br/>
+ブラウザを立ち上げで、以下のURLにアクセスします。<br/>
+(ブラウザはフロントエンドのデバッグが容易なchromeをお勧めします)</p>
+<pre><code><code><div>http://localhost:3000/
+</div></code></code></pre>
+<p>無事、画面が表示されたでしょうか？</p>
+<p><img src="./images/ch11-01.png" alt=""></p>
+<p>終了するにはコマンドラインから <strong><code>Ctrl+C</code></strong> を入力します。</p>
+<h2 id="nuxtの解説">NUXTの解説</h2>
+<h3 id="nuxtのフォルダ構成について">NUXTのフォルダ構成について</h3>
+<p>フォルダ構成を確認します。</p>
+<pre><code><code><div>webapp
+    +- .nuxt         : 本番で公開される内容
+    +- assets        : コンパイルが必要な静的がファイル(CSSなど)
+    +- components    : VUE部品を管理(サンプルではLogo)
+    +- layouts       : ページのテンプレートを管理
+    +- middleware    : 認証などページを表示する共通前処理を定義
+    +- node_modules  : 必要なモジュールを保存(パッケージマネージャが管理)
+    +- pages         : 画面モジュールを管理
+    +- plugins       : 共通ファンクションなどを管理
+    +- static        : コンパイル不要なイメージなどの静的ファイルを管理
+    +- store         : Vuexという全体で利用可能なメモリを管理
+</div></code></code></pre>
+<h3 id="画面構成について">画面構成について</h3>
+<p>サンプル画面は次の様な構成となっています。</p>
+<pre><code><code><div>layout/default.vue
+    +- pages/index.vue
+        +- componets/Logo.vue
+</div></code></code></pre>
+<p><img src="./images/ch11-02.png" alt=""></p>
+<h3 id="vueの構成について">Vueの構成について</h3>
+<p>index.vueを参考に、Vueの構成について解説します。</p>
+<pre><code class="language-html"><div><span class="hljs-tag">&lt;<span class="hljs-name">template</span>&gt;</span>
+    :           画面に表示する内容をタグ形式で表現します
+<span class="hljs-tag">&lt;/<span class="hljs-name">template</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="undefined">
+    :           バックエンドとのやりとりや、画面内のデータを
+    :           JavaScriptで記述します
+</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-name">style</span>&gt;</span><span class="xml">
+    :           画面表示する要素の色や大きさ、配置をCSSで指定します
+<span class="hljs-tag">&lt;/<span class="hljs-name">stye</span>&gt;</span>
+</span></div></code></pre>
+<h3 id="リアクティブとは">リアクティブとは？</h3>
+<p>NUXTのベースであるVueの特徴 <strong>「リアクティブ」</strong> の概念について初期ページに手を加えて確認します。<br/>
+リアクティブとは簡単に言えば、「変化する変数の内容をリアルタイムに画面表示する」ものです。</p>
+<p>h2要素の&quot;My first NUX&quot;の下に、次のように要素を追加します。</p>
+<pre><code class="language-html"><div><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"links"</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>{{ message }}<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">v-model</span>=<span class="hljs-string">"message"</span> /&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+</div></code></pre>
+<p>script部分にmessageの定義を追加します。</p>
+<pre><code class="language-javascript"><div><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> {
+  <span class="hljs-attr">components</span>: {
+    Logo
+  },
+  data() {
+    <span class="hljs-keyword">return</span> {
+      <span class="hljs-attr">message</span>: <span class="hljs-string">''</span>
+    }
+  }
+}
+</div></code></pre>
+<p>入力欄に入力した文字がリアルタイムで上部のメッセージに反映されるのがわかります。</p>
+<p>従来のWEB画面では表示内容を書き換えるのにリロードが必要でしたが、VueではDOMの状態を管理しており、バインドされた変数に変化があればその部分だけを書き換えるように出来ています。</p>
+<h2 id="次回以降の準備">次回以降の準備</h2>
+<h3 id="実習用ページの追加">実習用ページの追加</h3>
+<p>実習用ページとして、<strong>「pages/items.vue」</strong> を追加します。</p>
+<pre><code class="language-html"><div><span class="hljs-tag">&lt;<span class="hljs-name">template</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">el-row</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"flex"</span> <span class="hljs-attr">justify</span>=<span class="hljs-string">"center"</span> <span class="hljs-attr">style</span>=<span class="hljs-string">"margin-top: 2rem;"</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">el-col</span> <span class="hljs-attr">:span</span>=<span class="hljs-string">"2"</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-name">el-col</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">el-col</span> <span class="hljs-attr">:span</span>=<span class="hljs-string">"20"</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-name">h2</span>&gt;</span>Items<span class="hljs-tag">&lt;/<span class="hljs-name">h2</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-name">el-col</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">el-col</span> <span class="hljs-attr">:span</span>=<span class="hljs-string">"2"</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-name">el-col</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">el-row</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">template</span>&gt;</span>
+</div></code></pre>
+<p>参考URL: ElementUI/Layout<br/>
+<a href="https://element.eleme.io/#/en-US/component/layout">https://element.eleme.io/#/en-US/component/layout</a></p>
+<h3 id="メニューの追加">メニューの追加</h3>
+<p>Single Page Application ですが、一応メニューも追加してみます。</p>
+<p><strong>「layout/default.vue」</strong> ElementUIの水平メニューを追加します。</p>
+<p>&lt;template&gt;内に&lt;el-menu ..&gt; ~ &lt;/el-menu&gt; 部分を追加</p>
+<pre><code class="language-html"><div><span class="hljs-tag">&lt;<span class="hljs-name">template</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">el-menu</span> <span class="hljs-attr">:default-active</span>=<span class="hljs-string">"activeIndex"</span> <span class="hljs-attr">mode</span>=<span class="hljs-string">"horizontal"</span> <span class="hljs-attr">router</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">el-menu-item</span> <span class="hljs-attr">index</span>=<span class="hljs-string">"/"</span>&gt;</span>About<span class="hljs-tag">&lt;/<span class="hljs-name">el-menu-item</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">el-menu-item</span> <span class="hljs-attr">index</span>=<span class="hljs-string">"/items"</span>&gt;</span>Items<span class="hljs-tag">&lt;/<span class="hljs-name">el-menu-item</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">el-menu</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">nuxt</span> /&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">template</span>&gt;</span>
+</div></code></pre>
+<p>script部分に下記を追加</p>
+<pre><code class="language-javascript"><div>&lt;script&gt;
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> {
+  data() {
+    <span class="hljs-keyword">return</span> {
+      <span class="hljs-attr">activeIndex</span>: <span class="hljs-string">'/'</span>
+    }
+  },
+  mounted() {
+    <span class="hljs-keyword">this</span>.activeIndex = <span class="hljs-keyword">this</span>.$route.path
+  }
+}
+&lt;<span class="hljs-regexp">/script&gt;
+</span></div></code></pre>
+<p>参考URL: ElementUI/Navimenu<br/>
+<a href="https://element.eleme.io/#/en-US/component/menu">https://element.eleme.io/#/en-US/component/menu</a></p>
+<p>比較的少ない手間で、メニューバーが追加できることを体験頂きました。</p>
+<p><img src="./images/ch11-03.png" alt=""></p>
+<h2 id="webapp-ソースの取得">webapp ソースの取得</h2>
+<h3 id="historyからソースを取得">historyからソースを取得</h3>
+<p>ソースファイルフォルダ：10_WEBAPP\history\webapp</p>
+<h3 id="git-hub-からソースを取得">git hub からソースを取得</h3>
+<p>今回(webapp終了時点)のソースを取得するには、以下のコマンドを実行します。</p>
+<pre><code><code><div>git clone https://github.com/hiszuk/webapp.git -b webapp --depth 1 webapp
+</div></code></code></pre>
+<h3 id="モジュールダウンロード">モジュールダウンロード</h3>
+<p>画面を起動するには必要モジュールのダウンロードが必要です。</p>
+<pre><code><code><div>yarn install
+</div></code></code></pre>
+<p>ダウンロードできない場合、以下のフォルダよりnode_modulesをコピーしてください。</p>
+<p>50_ETC\node_modules</p>
+
+    </body>
+    </html>

@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <title>概要</title>
+        <style>
+</style>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/katex.min.css" integrity="sha384-yFRtMMDnQtDRO8rLpMIKrtPCD5jdktao2TV19YiZYWMDkUR5GQZR/NOVTdquEx1j" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/markdown.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/highlight.css">
+        <link href="https://cdn.jsdelivr.net/npm/katex-copytex@latest/dist/katex-copytex.min.css" rel="stylesheet" type="text/css">
+        <style>
+.task-list-item { list-style-type: none; } .task-list-item-checkbox { margin-left: -20px; vertical-align: middle; }
+</style>
+        <style>
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe WPC', 'Segoe UI', 'Ubuntu', 'Droid Sans', sans-serif;
+                font-size: 14px;
+                line-height: 1.6;
+            }
+        </style>
+        
+        <script src="https://cdn.jsdelivr.net/npm/katex-copytex@latest/dist/katex-copytex.min.js"></script>
+        
+    </head>
+    <body class="vscode-light">
+        <h2 id="概要">概要</h2>
+<ul>
+<li><a href="#%E6%A6%82%E8%A6%81">概要</a></li>
+<li><a href="#%E3%83%86%E3%83%BC%E3%83%96%E3%83%AB%E3%81%AE%E5%AE%9F%E8%A3%85">テーブルの実装</a>
+<ul>
+<li><a href="#%E3%83%98%E3%83%83%E3%83%80%E5%9B%BA%E5%AE%9A%E3%81%AE%E3%83%86%E3%83%BC%E3%83%96%E3%83%AB%E3%82%92%E5%AE%9F%E8%A3%85%E3%81%99%E3%82%8B">ヘッダ固定のテーブルを実装する</a></li>
+<li><a href="#%E3%82%AB%E3%83%A9%E3%83%A0%E3%81%A8%E3%83%87%E3%83%BC%E3%82%BF%E3%82%92%E4%BB%8A%E5%9B%9E%E3%81%AE%E5%AE%9F%E7%BF%92%E7%94%A8%E3%81%AB%E5%A4%89%E6%9B%B4%E3%81%97%E3%81%BE%E3%81%99">カラムとデータを今回の実習用に変更します</a></li>
+<li><a href="#editdelete%E3%83%9C%E3%82%BF%E3%83%B3%E8%BF%BD%E5%8A%A0">Edit/Deleteボタン追加</a></li>
+</ul>
+</li>
+<li><a href="#%E7%B5%9E%E3%82%8A%E8%BE%BC%E3%81%BF%E6%A4%9C%E7%B4%A2%E3%81%AE%E5%AE%9F%E8%A3%85">絞り込み検索の実装</a>
+<ul>
+<li><a href="#%E5%85%A5%E5%8A%9B%E6%AC%84%E3%81%AE%E8%BF%BD%E5%8A%A0">入力欄の追加</a></li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="テーブルの実装">テーブルの実装</h2>
+<h3 id="ヘッダ固定のテーブルを実装する">ヘッダ固定のテーブルを実装する</h3>
+<p><a href="https://element.eleme.cn/#/en-US/component/table#table-with-fixed-header">https://element.eleme.cn/#/en-US/component/table#table-with-fixed-header</a></p>
+<p>上記のソースをコピーしてテーブルを作成する。</p>
+<pre><code class="language-html"><div>  <span class="hljs-tag">&lt;<span class="hljs-name">el-table</span> <span class="hljs-attr">:data</span>=<span class="hljs-string">"tableData"</span> <span class="hljs-attr">height</span>=<span class="hljs-string">"250"</span> <span class="hljs-attr">style</span>=<span class="hljs-string">"width: 100%"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">el-table-column</span> <span class="hljs-attr">prop</span>=<span class="hljs-string">"date"</span> <span class="hljs-attr">label</span>=<span class="hljs-string">"Date"</span> <span class="hljs-attr">width</span>=<span class="hljs-string">"180"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">el-table-column</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">el-table-column</span> <span class="hljs-attr">prop</span>=<span class="hljs-string">"name"</span> <span class="hljs-attr">label</span>=<span class="hljs-string">"Name"</span> <span class="hljs-attr">width</span>=<span class="hljs-string">"180"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">el-table-column</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">el-table-column</span> <span class="hljs-attr">prop</span>=<span class="hljs-string">"address"</span> <span class="hljs-attr">label</span>=<span class="hljs-string">"Address"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">el-table-column</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">el-table</span>&gt;</span>
+</div></code></pre>
+<p>script部分もコピーします。</p>
+<pre><code class="language-JavaScript"><div>&lt;script&gt;
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> {
+    data() {
+        <span class="hljs-keyword">return</span> {
+        <span class="hljs-attr">tableData</span>: [{
+            <span class="hljs-attr">date</span>: <span class="hljs-string">'2016-05-03'</span>,
+            <span class="hljs-attr">name</span>: <span class="hljs-string">'Tom'</span>,
+            <span class="hljs-attr">address</span>: <span class="hljs-string">'No. 189, Grove St, Los Angeles'</span>
+        }, {
+            <span class="hljs-attr">date</span>: <span class="hljs-string">'2016-05-02'</span>,
+            <span class="hljs-attr">name</span>: <span class="hljs-string">'Tom'</span>,
+            <span class="hljs-attr">address</span>: <span class="hljs-string">'No. 189, Grove St, Los Angeles'</span>
+        }, {
+            <span class="hljs-attr">date</span>: <span class="hljs-string">'2016-05-04'</span>,
+            <span class="hljs-attr">name</span>: <span class="hljs-string">'Tom'</span>,
+            <span class="hljs-attr">address</span>: <span class="hljs-string">'No. 189, Grove St, Los Angeles'</span>
+        }, {
+            <span class="hljs-attr">date</span>: <span class="hljs-string">'2016-05-01'</span>,
+            <span class="hljs-attr">name</span>: <span class="hljs-string">'Tom'</span>,
+            <span class="hljs-attr">address</span>: <span class="hljs-string">'No. 189, Grove St, Los Angeles'</span>
+        }, {
+            <span class="hljs-attr">date</span>: <span class="hljs-string">'2016-05-08'</span>,
+            <span class="hljs-attr">name</span>: <span class="hljs-string">'Tom'</span>,
+            <span class="hljs-attr">address</span>: <span class="hljs-string">'No. 189, Grove St, Los Angeles'</span>
+        }, {
+            <span class="hljs-attr">date</span>: <span class="hljs-string">'2016-05-06'</span>,
+            <span class="hljs-attr">name</span>: <span class="hljs-string">'Tom'</span>,
+            <span class="hljs-attr">address</span>: <span class="hljs-string">'No. 189, Grove St, Los Angeles'</span>
+        }, {
+            <span class="hljs-attr">date</span>: <span class="hljs-string">'2016-05-07'</span>,
+            <span class="hljs-attr">name</span>: <span class="hljs-string">'Tom'</span>,
+            <span class="hljs-attr">address</span>: <span class="hljs-string">'No. 189, Grove St, Los Angeles'</span>
+        }],
+        }
+    }
+}
+&lt;<span class="hljs-regexp">/script&gt;
+</span></div></code></pre>
+<p>動かしてみます。</p>
+<pre><code><code><div>CMD&gt; yarn dev
+</div></code></code></pre>
+<p>prettierのエラーが出たら…</p>
+<pre><code><code><div>CMD&gt; yarn lint --fix
+</div></code></code></pre>
+<p>で整形してもらいます。</p>
+<p>再度起動し、<a href="http://localhost:3000/items">http://localhost:3000/items</a> にアクセスします。</p>
+<p><img src="./images/ch12-01.png" alt=""></p>
+<p>テーブルが実装できました。</p>
+<h3 id="カラムとデータを今回の実習用に変更します">カラムとデータを今回の実習用に変更します</h3>
+<p>＜実習用データ＞</p>
+<table>
+<thead>
+<tr>
+<th>id</th>
+<th>title</th>
+<th>content</th>
+<th>status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>WEB Application作成</td>
+<td>NUXT.js+ElementUIでフロントエンドのWEBアプリを作成する</td>
+<td>DONE</td>
+</tr>
+<tr>
+<td>2</td>
+<td>RESTful API作成</td>
+<td>Spring Bootを用いてRESTful APIを構築する</td>
+<td>DONE</td>
+</tr>
+<tr>
+<td>3</td>
+<td>フロントエンドとバックエンドを結合</td>
+<td>NUXTのアプリからaxios経由でREST APIをコールしフロントとバックエンドを繋げる</td>
+<td>PROGRESS</td>
+</tr>
+<tr>
+<td>4</td>
+<td>MySQLのDockerイメージを作成する</td>
+<td>DockerでRESTful APIでアクセスするMySQLのイメージを作成する</td>
+<td>PROGRESS</td>
+</tr>
+<tr>
+<td>5</td>
+<td>バックエンドのDockerイメージを作成する</td>
+<td>Javaのイメージにバックエンドのjarをレイヤー化したイメージを作成する</td>
+<td>TODO</td>
+</tr>
+<tr>
+<td>6</td>
+<td>フロントエンドのDockerイメージを作成する</td>
+<td>Node.jsからNUXTをインストールしWEBアプリをコピー後にbuildするイメージを作成する</td>
+<td>TODO</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Docker-composeでパッケージ化する</td>
+<td>フロントエンド・バックエンド・DBの3層をひとつのパッケージにまとめる</td>
+<td>TODO</td>
+</tr>
+</tbody>
+</table>
+<p>テーブルのカラムを変更する</p>
+<pre><code class="language-html"><div><span class="hljs-tag">&lt;<span class="hljs-name">el-table</span> <span class="hljs-attr">ref</span>=<span class="hljs-string">"itemTable"</span> <span class="hljs-attr">:data</span>=<span class="hljs-string">"tableData"</span> <span class="hljs-attr">height</span>=<span class="hljs-string">"300"</span> <span class="hljs-attr">style</span>=<span class="hljs-string">"width: 100%"</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">el-table-column</span> <span class="hljs-attr">prop</span>=<span class="hljs-string">"id"</span> <span class="hljs-attr">label</span>=<span class="hljs-string">"ID"</span> <span class="hljs-attr">min-width</span>=<span class="hljs-string">"40"</span> <span class="hljs-attr">header-align</span>=<span class="hljs-string">"center"</span> <span class="hljs-attr">align</span>=<span class="hljs-string">"right"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">el-table-column</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">el-table-column</span> <span class="hljs-attr">prop</span>=<span class="hljs-string">"title"</span> <span class="hljs-attr">label</span>=<span class="hljs-string">"タイトル"</span> <span class="hljs-attr">min-width</span>=<span class="hljs-string">"200"</span> <span class="hljs-attr">header-align</span>=<span class="hljs-string">"center"</span> <span class="hljs-attr">show-overflow-tooltip</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">el-table-column</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">el-table-column</span> <span class="hljs-attr">prop</span>=<span class="hljs-string">"content"</span> <span class="hljs-attr">label</span>=<span class="hljs-string">"内容"</span> <span class="hljs-attr">min-width</span>=<span class="hljs-string">"400"</span> <span class="hljs-attr">header-align</span>=<span class="hljs-string">"center"</span> <span class="hljs-attr">show-overflow-tooltip</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">el-table-column</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">el-table-column</span> <span class="hljs-attr">prop</span>=<span class="hljs-string">"status"</span> <span class="hljs-attr">label</span>=<span class="hljs-string">"状態"</span> <span class="hljs-attr">min-width</span>=<span class="hljs-string">"100"</span> <span class="hljs-attr">align</span>=<span class="hljs-string">"center"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">template</span> <span class="hljs-attr">slot-scope</span>=<span class="hljs-string">"scope"</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">el-tag</span> <span class="hljs-attr">:type</span>=<span class="hljs-string">"scope.row.status === 'DONE' ? 'success' : (scope.row.status === 'PROGRESS' ? 'primary' : 'warning')"</span> <span class="hljs-attr">disable-transitions</span>&gt;</span>
+        {{ scope.row.status }}
+      <span class="hljs-tag">&lt;/<span class="hljs-name">el-tag</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">template</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">el-table-column</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">el-table</span>&gt;</span>
+</div></code></pre>
+<p>データ部分</p>
+<pre><code class="language-json"><div>{
+  id: '<span class="hljs-number">1</span>',
+  title: 'WEBApplication作成',
+  content: 'NUXT.js+ElementUIでフロントエンドのWEBアプリを作成する',
+  status: 'DONE'
+},
+{
+  id: '<span class="hljs-number">2</span>',
+  title: 'RESTfulAPI作成',
+  content: 'SpringBootを用いてRESTfulAPIを構築する',
+  status: 'DONE'
+},
+{
+  id: '<span class="hljs-number">3</span>',
+  title: 'フロントエンドとバックエンドを結合',
+  content: 'NUXTのアプリからaxios経由でRESTAPIをコールしフロントとバックエンドを繋げる',
+  status: 'PROGRESS'
+},
+{
+  id: '<span class="hljs-number">4</span>',
+  title: 'MySQLのDockerイメージを作成する',
+  content: 'DockerでRESTfulAPIでアクセスするMySQLのイメージを作成する',
+  status: 'PROGRESS'
+},
+{
+  id: '<span class="hljs-number">5</span>',
+  title: 'バックエンドのDockerイメージを作成する',
+  content: 'Javaのイメージにバックエンドのjarをレイヤー化したイメージを作成する',
+  status: 'TODO'
+},
+{
+  id: '<span class="hljs-number">6</span>',
+  title: 'フロントエンドのDockerイメージを作成する',
+  content: 'Node.jsからNUXTをインストールしWEBアプリをコピー後にbuildするイメージを作成する',
+  status: 'TODO'
+},
+{
+  id: '<span class="hljs-number">7</span>',
+  title: 'Docker-composeでパッケージ化する',
+  content: 'フロントエンド・バックエンド・DBの<span class="hljs-number">3</span>層をひとつのパッケージにまとめる',
+  status: 'TODO'
+}
+</div></code></pre>
+<p><img src="./images/ch12-02.png" alt=""></p>
+<h3 id="editdeleteボタン追加">Edit/Deleteボタン追加</h3>
+<p>下記サンプルを参考に操作ボタンを追加する</p>
+<p><a href="https://element.eleme.cn/#/en-US/component/table#custom-column-template">https://element.eleme.cn/#/en-US/component/table#custom-column-template</a></p>
+<p>せっかくなので文字ではなくアイコンボタンにしてみます。</p>
+<p><a href="https://element.eleme.cn/#/en-US/component/icon">https://element.eleme.cn/#/en-US/component/icon</a></p>
+<pre><code class="language-html"><div><span class="hljs-tag">&lt;<span class="hljs-name">el-table-column</span> <span class="hljs-attr">label</span>=<span class="hljs-string">"操作"</span> <span class="hljs-attr">min-width</span>=<span class="hljs-string">"120"</span> <span class="hljs-attr">header-align</span>=<span class="hljs-string">"center"</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">template</span> <span class="hljs-attr">slot-scope</span>=<span class="hljs-string">"scope"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">el-button</span> <span class="hljs-attr">size</span>=<span class="hljs-string">"mini"</span> <span class="hljs-attr">round</span> @<span class="hljs-attr">click</span>=<span class="hljs-string">"handleEdit(scope.$index, scope.row)"</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">i</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"el-icon-edit"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">i</span>&gt;</span> <span class="hljs-tag">&lt;/<span class="hljs-name">el-button</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">el-button</span> <span class="hljs-attr">size</span>=<span class="hljs-string">"mini"</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"danger"</span> <span class="hljs-attr">round</span> @<span class="hljs-attr">click</span>=<span class="hljs-string">"handleDelete(scope.$index, scope.row)"</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">i</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"el-icon-delete"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">i</span>&gt;</span> <span class="hljs-tag">&lt;/<span class="hljs-name">el-button</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">template</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">el-table-column</span>&gt;</span>
+</div></code></pre>
+<p>script追加部分</p>
+<pre><code class="language-JavaScript"><div>  methods: {
+    handleEdit(index, row) {
+      <span class="hljs-built_in">console</span>.log(index, row);
+    },
+    handleDelete(index, row) {
+      <span class="hljs-built_in">console</span>.log(index, row);
+    }
+  }
+</div></code></pre>
+<p><img src="./images/ch12-03.png" alt=""></p>
+<h2 id="絞り込み検索の実装">絞り込み検索の実装</h2>
+<p>内容で部分一致でデータを絞り込む機能を実装します。</p>
+<h3 id="入力欄の追加">入力欄の追加</h3>
+<p>下記サンプルを元に入力欄を追加します。</p>
+<p><a href="https://element.eleme.cn/#/en-US/component/input#mixed-input">https://element.eleme.cn/#/en-US/component/input#mixed-input</a></p>
+<pre><code class="language-html"><div>  <span class="hljs-tag">&lt;<span class="hljs-name">el-input</span> <span class="hljs-attr">placeholder</span>=<span class="hljs-string">"検索文字列を入力"</span> <span class="hljs-attr">v-model</span>=<span class="hljs-string">"search"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">template</span> <span class="hljs-attr">slot</span>=<span class="hljs-string">"prepend"</span>&gt;</span>内容を検索する<span class="hljs-tag">&lt;/<span class="hljs-name">template</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">el-input</span>&gt;</span>
+</div></code></pre>
+<p>scriptに検索文字列を保持する変数「search」追加</p>
+<pre><code><code><div>  data() {
+    return {
+      tableData: [
+        :
+      ],
+      search: ''
+    }
+  },
+</div></code></code></pre>
+<p>tableDataから絞り込む処理に変更</p>
+<p><a href="https://element.eleme.cn/#/en-US/component/table#table-with-custom-header">https://element.eleme.cn/#/en-US/component/table#table-with-custom-header</a></p>
+<pre><code><code><div>:data=&quot;
+  tableData.filter(
+    (data) =&gt;
+      !search ||
+      data.content.toLowerCase().includes(search.toLowerCase())
+  )
+&quot;
+</div></code></code></pre>
+<p><img src="./images/ch12-04.png" alt=""></p>
+
+    </body>
+    </html>

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <title>概要</title>
+        <style>
+</style>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/katex.min.css" integrity="sha384-yFRtMMDnQtDRO8rLpMIKrtPCD5jdktao2TV19YiZYWMDkUR5GQZR/NOVTdquEx1j" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/markdown.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/highlight.css">
+        <link href="https://cdn.jsdelivr.net/npm/katex-copytex@latest/dist/katex-copytex.min.css" rel="stylesheet" type="text/css">
+        <style>
+.task-list-item { list-style-type: none; } .task-list-item-checkbox { margin-left: -20px; vertical-align: middle; }
+</style>
+        <style>
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe WPC', 'Segoe UI', 'Ubuntu', 'Droid Sans', sans-serif;
+                font-size: 14px;
+                line-height: 1.6;
+            }
+        </style>
+        
+        <script src="https://cdn.jsdelivr.net/npm/katex-copytex@latest/dist/katex-copytex.min.js"></script>
+        
+    </head>
+    <body class="vscode-light">
+        <h2 id="概要">概要</h2>
+<ul>
+<li><a href="#%E6%A6%82%E8%A6%81">概要</a></li>
+<li><a href="#%E7%B7%A8%E9%9B%86%E3%83%80%E3%82%A4%E3%82%A2%E3%83%AD%E3%82%B0%E3%81%AE%E5%AE%9F%E8%A3%85">編集ダイアログの実装</a>
+<ul>
+<li><a href="#%E3%83%80%E3%82%A4%E3%82%A2%E3%83%AD%E3%82%B0%E3%82%92%E5%AE%9F%E8%A3%85%E3%81%99%E3%82%8B">ダイアログを実装する</a></li>
+<li><a href="#%E7%B7%A8%E9%9B%86%E5%8B%95%E4%BD%9C%E3%81%AE%E5%AE%9F%E8%A3%85">編集動作の実装</a></li>
+<li><a href="#%E7%A2%BA%E5%AE%9A%E3%83%9C%E3%82%BF%E3%83%B3%E5%8B%95%E4%BD%9C%E3%81%AE%E5%AE%9F%E8%A3%85">確定ボタン動作の実装</a></li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="編集ダイアログの実装">編集ダイアログの実装</h2>
+<h3 id="ダイアログを実装する">ダイアログを実装する</h3>
+<p>以下を参考にフォームを内包したダイアログを作成する</p>
+<p><a href="https://element.eleme.io/#/en-US/component/dialog#customizations">https://element.eleme.io/#/en-US/component/dialog#customizations</a></p>
+<pre><code class="language-html"><div><span class="hljs-tag">&lt;<span class="hljs-name">el-dialog</span> <span class="hljs-attr">title</span>=<span class="hljs-string">"Todo 編集"</span> <span class="hljs-attr">:visible.sync</span>=<span class="hljs-string">"dialogFormVisible"</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">el-form</span> <span class="hljs-attr">:model</span>=<span class="hljs-string">"form"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">el-form-item</span> <span class="hljs-attr">label</span>=<span class="hljs-string">"ID"</span> <span class="hljs-attr">:label-width</span>=<span class="hljs-string">"formLabelWidth"</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">el-input</span> <span class="hljs-attr">v-model</span>=<span class="hljs-string">"form.id"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">el-input</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">el-form-item</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">el-form-item</span> <span class="hljs-attr">label</span>=<span class="hljs-string">"タイトル"</span> <span class="hljs-attr">:label-width</span>=<span class="hljs-string">"formLabelWidth"</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">el-input</span> <span class="hljs-attr">v-model</span>=<span class="hljs-string">"form.title"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">el-input</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">el-form-item</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">el-form-item</span> <span class="hljs-attr">label</span>=<span class="hljs-string">"内容"</span> <span class="hljs-attr">:label-width</span>=<span class="hljs-string">"formLabelWidth"</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">el-input</span> <span class="hljs-attr">v-model</span>=<span class="hljs-string">"form.content"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">el-input</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">el-form-item</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">el-form-item</span> <span class="hljs-attr">label</span>=<span class="hljs-string">"状態"</span> <span class="hljs-attr">:label-width</span>=<span class="hljs-string">"formLabelWidth"</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">el-select</span> <span class="hljs-attr">v-model</span>=<span class="hljs-string">"form.status"</span> <span class="hljs-attr">placeholder</span>=<span class="hljs-string">"選択してください"</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">el-option</span> <span class="hljs-attr">label</span>=<span class="hljs-string">"TODO"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"TODO"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">el-option</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">el-option</span> <span class="hljs-attr">label</span>=<span class="hljs-string">"PROGRESS"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"TODO"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">el-option</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">el-option</span> <span class="hljs-attr">label</span>=<span class="hljs-string">"DONE"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"DONE"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">el-option</span>&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-name">el-select</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">el-form-item</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">el-form</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">slot</span>=<span class="hljs-string">"footer"</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"dialog-footer"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">el-button</span> @<span class="hljs-attr">click</span>=<span class="hljs-string">"dialogFormVisible = false"</span>&gt;</span>中止<span class="hljs-tag">&lt;/<span class="hljs-name">el-button</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">el-button</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"primary"</span> @<span class="hljs-attr">click</span>=<span class="hljs-string">"dialogFormVisible = false"</span>&gt;</span>確定<span class="hljs-tag">&lt;/<span class="hljs-name">el-button</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">el-dialog</span>&gt;</span>
+</div></code></pre>
+<p>ダイアログ制御用の変数とフォーム用の変数を追加します。</p>
+<pre><code class="language-JavaScript"><div>formLabelWidth: <span class="hljs-string">'150px'</span>,
+<span class="hljs-attr">dialogFormVisible</span>: <span class="hljs-literal">false</span>,
+<span class="hljs-attr">disableID</span>: <span class="hljs-literal">true</span>,
+<span class="hljs-attr">rowNumber</span>: <span class="hljs-string">''</span>,
+<span class="hljs-attr">form</span>: {
+  <span class="hljs-attr">id</span>: <span class="hljs-literal">null</span>,
+  <span class="hljs-attr">title</span>: <span class="hljs-string">''</span>,
+  <span class="hljs-attr">content</span>: <span class="hljs-string">''</span>,
+  <span class="hljs-attr">status</span>: <span class="hljs-string">''</span>
+}
+</div></code></pre>
+<p>編集ボタンクリック時にダイアログが表示されるようにします。</p>
+<pre><code class="language-JavaScript"><div>handleEdit(index, row) {
+  <span class="hljs-built_in">console</span>.log(index, row)
+  <span class="hljs-keyword">this</span>.dialogFormVisible = <span class="hljs-literal">true</span>
+},
+</div></code></pre>
+<h3 id="編集動作の実装">編集動作の実装</h3>
+<p>編集ボタンをクリックされた時に、該当する行の内容をダイアログに表示する動きを実装します。<br/>
+(ただし、バックエンドとつないだ時には、バックエンドにデータ取得しに行くように変更します。)</p>
+<ul>
+<li>IDは入力できないように「disableID」をtrueにします。</li>
+<li>クリックされた行「row」の内容を「form」にコピーします。</li>
+</ul>
+<pre><code class="language-JavaScript"><div>handleEdit(index, row) {
+  <span class="hljs-keyword">this</span>.disableID = <span class="hljs-literal">true</span>
+  <span class="hljs-keyword">this</span>.rowNumber = index
+  <span class="hljs-comment">// ToDo: 本来はREST APIのkey(row.id)検索し結果をformにセットする</span>
+  <span class="hljs-keyword">this</span>.form.id = row.id
+  <span class="hljs-keyword">this</span>.form.title = row.title
+  <span class="hljs-keyword">this</span>.form.content = row.content
+  <span class="hljs-keyword">this</span>.form.status = row.status
+  <span class="hljs-keyword">this</span>.dialogFormVisible = <span class="hljs-literal">true</span>
+},
+</div></code></pre>
+<h3 id="確定ボタン動作の実装">確定ボタン動作の実装</h3>
+<p>確定ボタンをクリックしたときの動作をダミーで実装します。<br/>
+バックエンドとつないだ時には、更新のAPIをコールするように変更します。</p>
+<p>methodsにdoConfirmを追加します。</p>
+<ul>
+<li>ダイアログを閉じる(非表示にする)</li>
+<li>メッセージ用にtargetを作成</li>
+<li>編集結果を対象の行に反映する</li>
+<li>処理成功のメッセージを表示する</li>
+</ul>
+<pre><code class="language-JavaScript"><div>doConfirm() {
+  <span class="hljs-keyword">this</span>.dialogFormVisible = <span class="hljs-literal">false</span>
+  <span class="hljs-keyword">const</span> target = <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-keyword">this</span>.form.id}</span>:<span class="hljs-subst">${<span class="hljs-keyword">this</span>.form.title}</span>`</span>
+  <span class="hljs-comment">// ToDo: REST APIのアップデートを起動する</span>
+  <span class="hljs-keyword">const</span> row = <span class="hljs-keyword">this</span>.$refs.itemTable.data[<span class="hljs-keyword">this</span>.rowNumber]
+  row.title = <span class="hljs-keyword">this</span>.form.title
+  row.content = <span class="hljs-keyword">this</span>.form.content
+  row.status = <span class="hljs-keyword">this</span>.form.status
+  <span class="hljs-keyword">this</span>.$message({
+    <span class="hljs-attr">type</span>: <span class="hljs-string">'success'</span>,
+    <span class="hljs-attr">message</span>: <span class="hljs-string">`<span class="hljs-subst">${target}</span> : 更新が成功しました。`</span>,
+    <span class="hljs-attr">showClose</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">duration</span>: <span class="hljs-number">5000</span>
+  })
+}
+</div></code></pre>
+<p>確定ボタンクリック時にdoConfirmをコールするよう変更します。</p>
+<pre><code class="language-html"><div><span class="hljs-tag">&lt;<span class="hljs-name">el-button</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"primary"</span> @<span class="hljs-attr">click</span>=<span class="hljs-string">"doConfirm()"</span>&gt;</span>
+</div></code></pre>
+
+    </body>
+    </html>
