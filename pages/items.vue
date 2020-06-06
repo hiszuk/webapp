@@ -177,7 +177,7 @@ export default {
       })
         .then(() => {
           // ToDo: REST API 削除処理を起動
-
+          this.$refs.itemTable.data.splice(this.rowNumber, 1)
           this.$message({
             type: 'success',
             message: `${target} : 削除が成功しました。`,
