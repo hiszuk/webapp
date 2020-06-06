@@ -59,7 +59,7 @@
             <i class="el-icon-circle-close" style="font-size: 120%"></i>
             <span>中止</span>
           </el-button>
-          <el-button type="primary" @click="doConfirm()">
+          <el-button type="primary" @click="doExecute()">
             <i class="el-icon-circle-check" style="font-size: 120%"></i>
             <span>確定</span>
           </el-button>
@@ -144,8 +144,14 @@ export default {
     handleDelete(index, row) {
       console.log(index, row)
     },
-    doConfirm() {
+    doExecute() {
       this.dialogFormVisible = false
+      // 編集モード(disableID=true)の場合は更新処理
+      if (this.disableID) {
+        this.updateItem()
+      }
+    },
+    updateItem() {
       const target = `${this.form.id}:${this.form.title}`
       // ToDo: 本来はREST APIのアップデートを起動する
       const row = this.$refs.itemTable.data[this.rowNumber]
