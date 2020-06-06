@@ -7,13 +7,13 @@
       <el-col :span="20">
         <!-- 検索入力 -->
         <el-input v-model="search" size="small" placeholder="検索文字列を入力">
-          <template slot="prepend">内容を検索する</template>
+          <template slot="prepend">内容で絞り込む</template>
         </el-input>
         <!-- 表部分 -->
-        <el-table ref="itemTable" :data="tableData.filter((data) => !search || data.content.toLowerCase().includes(search.toLowerCase()))" height="300" style="width: 100%">
+        <el-table ref="itemTable" :data="tableData.filter((data) => !search || data.content.toLowerCase().includes(search.toLowerCase()))" height="400" style="width: 100%">
           <el-table-column prop="id" label="ID" min-width="40" header-align="center" align="right"> </el-table-column>
           <el-table-column prop="title" label="タイトル" min-width="200" header-align="center" show-overflow-tooltip> </el-table-column>
-          <el-table-column prop="content" label="内容" min-width="400" header-align="center" show-overflow-tooltip> </el-table-column>
+          <el-table-column prop="content" label="内容" min-width="300" header-align="center" show-overflow-tooltip> </el-table-column>
           <el-table-column prop="status" label="状態" min-width="100" align="center">
             <template slot-scope="scope">
               <el-tag :type="scope.row.status === 'DONE' ? 'success' : scope.row.status === 'PROGRESS' ? 'primary' : 'warning'" disable-transitions>
