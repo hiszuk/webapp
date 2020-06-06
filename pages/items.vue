@@ -38,7 +38,7 @@
       <el-dialog title="Todo 編集" :visible.sync="dialogFormVisible">
         <el-form :model="form">
           <el-form-item label="ID" :label-width="formLabelWidth">
-            <el-input v-model="form.id" :readonly="disableID"></el-input>
+            <el-input v-model="form.id" disabled></el-input>
           </el-form-item>
           <el-form-item label="タイトル" :label-width="formLabelWidth">
             <el-input v-model="form.title"></el-input>
@@ -120,7 +120,7 @@ export default {
       search: '',
       formLabelWidth: '150px',
       dialogFormVisible: false,
-      disableID: true,
+      isUpdate: true,
       rowNumber: '',
       form: {
         id: null,
@@ -132,7 +132,7 @@ export default {
   },
   methods: {
     handleEdit(index, row) {
-      this.disableID = true
+      this.isUpdate = true
       this.rowNumber = index
       // ToDo: 本来はREST APIのkey(row.id)検索し結果をformにセットする
       this.form.id = row.id
@@ -146,8 +146,8 @@ export default {
     },
     doExecute() {
       this.dialogFormVisible = false
-      // 編集モード(disableID=true)の場合は更新処理
-      if (this.disableID) {
+      // 編集モード(isUpdate=true)の場合は更新処理
+      if (this.isUpdate) {
         this.updateItem()
       }
     },
