@@ -16,6 +16,23 @@
               </el-tag>
             </template>
           </el-table-column>
+          <el-table-column label="操作" min-width="120" header-align="center">
+            <template slot-scope="scope">
+              <el-button
+                size="mini"
+                round
+                @click="handleEdit(scope.$index, scope.row)"
+                ><i class="el-icon-edit"></i>
+              </el-button>
+              <el-button
+                size="mini"
+                type="danger"
+                round
+                @click="handleDelete(scope.$index, scope.row)"
+                ><i class="el-icon-delete"></i>
+              </el-button>
+            </template>
+          </el-table-column>
         </el-table>
       </el-col>
       <el-col :span="2">
@@ -73,6 +90,14 @@ export default {
           status: 'TODO'
         }
       ]
+    }
+  },
+  methods: {
+    handleEdit(index, row) {
+      console.log(index, row)
+    },
+    handleDelete(index, row) {
+      console.log(index, row)
     }
   }
 }
