@@ -5,9 +5,11 @@
         <div></div>
       </el-col>
       <el-col :span="20">
+        <!-- 検索入力 -->
         <el-input v-model="search" size="small" placeholder="検索文字列を入力">
           <template slot="prepend">内容で絞り込む</template>
         </el-input>
+        <!-- 表部分 -->
         <el-table ref="itemTable" :data="tableData.filter((data) => !search || data.content.toLowerCase().includes(search.toLowerCase()))" height="400" style="width: 100%">
           <el-table-column prop="id" label="ID" min-width="40" header-align="center" align="right"> </el-table-column>
           <el-table-column prop="title" label="タイトル" min-width="200" header-align="center" show-overflow-tooltip> </el-table-column>
@@ -31,6 +33,39 @@
         <div></div>
       </el-col>
     </el-row>
+    <!-- 編集入力 Dialog -->
+    <div>
+      <el-dialog title="Todo 編集" :visible.sync="dialogFormVisible">
+        <el-form :model="form">
+          <el-form-item label="ID" :label-width="formLabelWidth">
+            <el-input v-model="form.id" :readonly="disableID"></el-input>
+          </el-form-item>
+          <el-form-item label="タイトル" :label-width="formLabelWidth">
+            <el-input v-model="form.title"></el-input>
+          </el-form-item>
+          <el-form-item label="内容" :label-width="formLabelWidth">
+            <el-input v-model="form.content" type="textarea"></el-input>
+          </el-form-item>
+          <el-form-item label="状態" :label-width="formLabelWidth">
+            <el-select v-model="form.status" placeholder="選択してください">
+              <el-option label="TODO" value="TODO"></el-option>
+              <el-option label="PROGRESS" value="PROGRESS"></el-option>
+              <el-option label="DONE" value="DONE"></el-option>
+            </el-select>
+          </el-form-item>
+        </el-form>
+        <span slot="footer" class="dialog-footer">
+          <el-button type="info" plain @click="dialogFormVisible = false">
+            <i class="el-icon-circle-close" style="font-size: 120%"></i>
+            <span>中止</span>
+          </el-button>
+          <el-button type="primary" @click="doConfirm()">
+            <i class="el-icon-circle-check" style="font-size: 120%"></i>
+            <span>確定</span>
+          </el-button>
+        </span>
+      </el-dialog>
+    </div>
   </div>
 </template>
 
@@ -82,15 +117,47 @@ export default {
           status: 'TODO'
         }
       ],
-      search: ''
+      search: '',
+      formLabelWidth: '150px',
+      dialogFormVisible: false,
+      disableID: true,
+      rowNumber: '',
+      form: {
+        id: null,
+        title: '',
+        content: '',
+        status: ''
+      }
     }
   },
   methods: {
     handleEdit(index, row) {
-      console.log(index, row)
+      this.disableID = true
+      this.rowNumber = index
+      // ToDo: 本来はREST APIのkey(row.id)検索し結果をformにセットする
+      this.form.id = row.id
+      this.form.title = row.title
+      this.form.content = row.content
+      this.form.status = row.status
+      this.dialogFormVisible = true
     },
     handleDelete(index, row) {
       console.log(index, row)
+    },
+    doConfirm() {
+      this.dialogFormVisible = false
+      const target = `${this.form.id}:${this.form.title}`
+      // ToDo: 本来はREST APIのアップデートを起動する
+      const row = this.$refs.itemTable.data[this.rowNumber]
+      row.title = this.form.title
+      row.content = this.form.content
+      row.status = this.form.status
+      this.$message({
+        type: 'success',
+        message: `${target} : 更新が成功しました。`,
+        showClose: true,
+        duration: 5000
+      })
     }
   }
 }
