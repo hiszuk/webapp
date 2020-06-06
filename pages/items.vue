@@ -8,7 +8,7 @@
         <el-table ref="itemTable" :data="tableData" height="300" style="width: 100%">
           <el-table-column prop="id" label="ID" min-width="40" header-align="center" align="right"> </el-table-column>
           <el-table-column prop="title" label="タイトル" min-width="200" header-align="center" show-overflow-tooltip> </el-table-column>
-          <el-table-column prop="content" label="内容" min-width="400" header-align="center" show-overflow-tooltip> </el-table-column>
+          <el-table-column prop="content" label="内容" min-width="300" header-align="center" show-overflow-tooltip> </el-table-column>
           <el-table-column prop="status" label="状態" min-width="100" align="center">
             <template slot-scope="scope">
               <el-tag :type="scope.row.status === 'DONE' ? 'success' : scope.row.status === 'PROGRESS' ? 'primary' : 'warning'" disable-transitions>
@@ -18,19 +18,8 @@
           </el-table-column>
           <el-table-column label="操作" min-width="120" header-align="center">
             <template slot-scope="scope">
-              <el-button
-                size="mini"
-                round
-                @click="handleEdit(scope.$index, scope.row)"
-                ><i class="el-icon-edit"></i>
-              </el-button>
-              <el-button
-                size="mini"
-                type="danger"
-                round
-                @click="handleDelete(scope.$index, scope.row)"
-                ><i class="el-icon-delete"></i>
-              </el-button>
+              <el-button size="mini" round @click="handleEdit(scope.$index, scope.row)"><i class="el-icon-edit"></i> </el-button>
+              <el-button size="mini" type="danger" round @click="handleDelete(scope.$index, scope.row)"><i class="el-icon-delete"></i> </el-button>
             </template>
           </el-table-column>
         </el-table>
