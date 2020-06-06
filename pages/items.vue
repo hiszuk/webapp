@@ -31,6 +31,39 @@
         <div></div>
       </el-col>
     </el-row>
+    <!-- 編集入力 Dialog -->
+    <div>
+      <el-dialog title="Todo 編集" :visible.sync="dialogFormVisible">
+        <el-form :model="form">
+          <el-form-item label="ID" :label-width="formLabelWidth">
+            <el-input v-model="form.id" disabled></el-input>
+          </el-form-item>
+          <el-form-item label="タイトル" :label-width="formLabelWidth">
+            <el-input v-model="form.title"></el-input>
+          </el-form-item>
+          <el-form-item label="内容" :label-width="formLabelWidth">
+            <el-input v-model="form.content" type="textarea"></el-input>
+          </el-form-item>
+          <el-form-item label="状態" :label-width="formLabelWidth">
+            <el-select v-model="form.status" placeholder="選択してください">
+              <el-option label="TODO" value="TODO"></el-option>
+              <el-option label="PROGRESS" value="PROGRESS"></el-option>
+              <el-option label="DONE" value="DONE"></el-option>
+            </el-select>
+          </el-form-item>
+        </el-form>
+        <span slot="footer" class="dialog-footer">
+          <el-button type="info" plain @click="dialogFormVisible = false">
+            <i class="el-icon-circle-close" style="font-size: 120%"></i>
+            <span>中止</span>
+          </el-button>
+          <el-button type="primary" @click="doExecute()">
+            <i class="el-icon-circle-check" style="font-size: 120%"></i>
+            <span>確定</span>
+          </el-button>
+        </span>
+      </el-dialog>
+    </div>
   </div>
 </template>
 
@@ -82,15 +115,78 @@ export default {
           status: 'TODO'
         }
       ],
-      search: ''
+      item: {
+        id: null,
+        title: '',
+        content: '',
+        status: ''
+      },
+      search: '',
+      formLabelWidth: '150px',
+      dialogFormVisible: false,
+      isUpdate: true,
+      rowNumber: '',
+      form: {
+        id: null,
+        title: '',
+        content: '',
+        status: ''
+      }
     }
   },
   methods: {
     handleEdit(index, row) {
-      console.log(index, row)
+      this.isUpdate = true
+      this.rowNumber = index
+      this.fetchKey(row.id)
+      this.form = { ...this.item }
+      this.dialogFormVisible = true
     },
     handleDelete(index, row) {
       console.log(index, row)
+    },
+    handleNew() {
+      this.isUpdate = false
+      this.form.id = null
+      this.form.title = ''
+      this.form.content = ''
+      this.form.status = 'TODO'
+      this.dialogFormVisible = true
+      // 以下はREST APIと接続するまでのダミー処理
+      // idはREST APIでは自動採番の予定なので
+      // 新規IDは便宜上最終行のID + 1 とする
+      const lastRow = this.$refs.itemTable.data.length - 1
+      this.form.id = parseInt(this.$refs.itemTable.data[lastRow].id) + 1
+    },
+    doExecute() {
+      this.dialogFormVisible = false
+      // 編集モード(isUpdate=true)の場合は更新処理
+      if (this.isUpdate) {
+        this.updateItem(this.form)
+      } else {
+        this.registerItem()
+      }
+    },
+    fetchKey(id) {
+      // ToDo: 本来はREST APIのkey(row.id)検索し結果をitemにセットする
+      const items = this.tableData.filter((data) => data.id === id)
+      this.item = { ...items[0] }
+    },
+    updateItem(param) {
+      // ToDo: 本来はREST APIのアップデートを起動する
+      this.tableData[this.rowNumber] = { ...param }
+
+      // 更新後の情報を取得しtableDataにセットする
+      this.fetchKey(param.id)
+      this.tableData[this.rowNumber] = { ...this.item }
+
+      const target = `${param.id}:${param.title}`
+      this.$message({
+        type: 'success',
+        message: `${target} : 更新が成功しました。`,
+        showClose: true,
+        duration: 5000
+      })
     }
   }
 }
