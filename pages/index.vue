@@ -9,6 +9,10 @@
         My first NUXT
       </h2>
       <div class="links">
+        <p>{{ message }}</p>
+        <input v-model="message" />
+      </div>
+      <div class="links">
         <a href="https://nuxtjs.org/" target="_blank" class="button--green">
           Documentation
         </a>
@@ -26,6 +30,11 @@ import Logo from '~/components/Logo.vue'
 export default {
   components: {
     Logo
+  },
+  data() {
+    return {
+      message: ''
+    }
   }
 }
 </script>
@@ -33,7 +42,7 @@ export default {
 <style>
 .container {
   margin: 0 auto;
-  min-height: 100vh;
+  min-height: calc(100vh - 100px);
   display: flex;
   justify-content: center;
   align-items: center;

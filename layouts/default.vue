@@ -1,8 +1,25 @@
 <template>
   <div>
+    <el-menu :default-active="activeIndex" mode="horizontal" router>
+      <el-menu-item index="/">About</el-menu-item>
+      <el-menu-item index="/items">Items</el-menu-item>
+    </el-menu>
     <nuxt />
   </div>
 </template>
+
+<script>
+export default {
+  data() {
+    return {
+      activeIndex: '/'
+    }
+  },
+  mounted() {
+    this.activeIndex = this.$route.path
+  }
+}
+</script>
 
 <style>
 html {
