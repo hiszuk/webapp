@@ -145,19 +145,6 @@ export default {
     handleDelete(index, row) {
       console.log(index, row)
     },
-    handleNew() {
-      this.isUpdate = false
-      this.form.id = null
-      this.form.title = ''
-      this.form.content = ''
-      this.form.status = 'TODO'
-      this.dialogFormVisible = true
-      // 以下はREST APIと接続するまでのダミー処理
-      // idはREST APIでは自動採番の予定なので
-      // 新規IDは便宜上最終行のID + 1 とする
-      const lastRow = this.$refs.itemTable.data.length - 1
-      this.form.id = parseInt(this.$refs.itemTable.data[lastRow].id) + 1
-    },
     doExecute() {
       this.dialogFormVisible = false
       // 編集モード(isUpdate=true)の場合は更新処理
