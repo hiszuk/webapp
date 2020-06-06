@@ -5,9 +5,18 @@
         <div></div>
       </el-col>
       <el-col :span="20">
-        <el-input v-model="search" size="small" placeholder="検索文字列を入力">
-          <template slot="prepend">内容で絞り込む</template>
-        </el-input>
+        <!-- 検索入力 -->
+        <el-row>
+          <el-col :span="20">
+            <el-input v-model="search" size="small" placeholder="検索文字列を入力">
+              <template slot="prepend">内容で絞り込む</template>
+            </el-input>
+          </el-col>
+          <el-col :span="4" style="text-align: center">
+            <el-button type="success" icon="el-icon-circle-plus-outline" size="small" @click="handleNew()">新規登録</el-button>
+          </el-col>
+        </el-row>
+        <!-- 表部分 -->
         <el-table ref="itemTable" :data="tableData.filter((data) => !search || data.content.toLowerCase().includes(search.toLowerCase()))" height="400" style="width: 100%">
           <el-table-column prop="id" label="ID" min-width="40" header-align="center" align="right"> </el-table-column>
           <el-table-column prop="title" label="タイトル" min-width="200" header-align="center" show-overflow-tooltip> </el-table-column>
@@ -131,7 +140,8 @@ export default {
         title: '',
         content: '',
         status: ''
-      }
+      },
+      nextId: 8
     }
   },
   methods: {
@@ -146,13 +156,24 @@ export default {
       this.rowNumber = index
       this.confirmDelete()
     },
+    handleNew() {
+      this.isUpdate = false
+      this.form.id = null
+      this.form.title = ''
+      this.form.content = ''
+      this.form.status = 'TODO'
+      this.dialogFormVisible = true
+      // 以下はREST APIと接続するまでのダミー処理
+      // idはREST APIでは自動採番の予定
+      this.form.id = this.nextId
+    },
     doExecute() {
       this.dialogFormVisible = false
       // 編集モード(isUpdate=true)の場合は更新処理
       if (this.isUpdate) {
         this.updateItem(this.form)
       } else {
-        this.registerItem()
+        this.registerItem(this.form)
       }
     },
     fetchKey(id) {
@@ -182,6 +203,13 @@ export default {
       // ToDo: REST API削除処理呼び出し
       // Dummy delete
       this.tableData = this.tableData.filter((data) => data.id !== id)
+    },
+    registerItem(param) {
+      // ToDo: REST API登録処理呼び出し
+      // Dummiy insert
+      const item = { ...param }
+      this.tableData.push(item)
+      this.nextId++
     },
     confirmDelete() {
       const row = this.tableData[this.rowNumber]
