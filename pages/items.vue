@@ -143,7 +143,8 @@ export default {
       this.dialogFormVisible = true
     },
     handleDelete(index, row) {
-      console.log(index, row)
+      this.rowNumber = index
+      this.confirmDelete()
     },
     doExecute() {
       this.dialogFormVisible = false
@@ -155,12 +156,14 @@ export default {
       }
     },
     fetchKey(id) {
-      // ToDo: 本来はREST APIのkey(row.id)検索し結果をitemにセットする
+      // ToDo: REST APIのkey(row.id)検索し結果をitemにセットする
+      // Dummy select
       const items = this.tableData.filter((data) => data.id === id)
       this.item = { ...items[0] }
     },
     updateItem(param) {
-      // ToDo: 本来はREST APIのアップデートを起動する
+      // ToDo: REST APIのアップデートを起動する
+      // Dummy update
       this.tableData[this.rowNumber] = { ...param }
 
       // 更新後の情報を取得しtableDataにセットする
@@ -174,6 +177,36 @@ export default {
         showClose: true,
         duration: 5000
       })
+    },
+    deleteItem(id) {
+      // ToDo: REST API削除処理呼び出し
+      // Dummy delete
+      this.tableData = this.tableData.filter((data) => data.id !== id)
+    },
+    confirmDelete() {
+      const row = this.tableData[this.rowNumber]
+      const target = `${row.id}:${row.title}`
+      const msg = `${target} を削除します。削除後は元に戻せませんが、実行してよろしいですか?`
+      this.$confirm(msg, 'Warning', {
+        confirmButtonText: '削除する',
+        cancelButtonText: 'やめる',
+        type: 'warning'
+      })
+        .then(() => {
+          this.deleteItem(row.id)
+          this.$message({
+            type: 'success',
+            message: `${target} : 削除が成功しました。`,
+            showClose: true,
+            duration: 5000
+          })
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '削除を中止しました。'
+          })
+        })
     }
   }
 }
