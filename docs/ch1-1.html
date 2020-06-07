@@ -2,7 +2,7 @@
     <html>
     <head>
         <meta charset="UTF-8">
-        <title>概要</title>
+        <title>WEBAPP勉強会 第1回目 解説</title>
         <style>
 </style>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/katex.min.css" integrity="sha384-yFRtMMDnQtDRO8rLpMIKrtPCD5jdktao2TV19YiZYWMDkUR5GQZR/NOVTdquEx1j" crossorigin="anonymous">
@@ -24,9 +24,10 @@
         
     </head>
     <body class="vscode-light">
-        <h2 id="概要">概要</h2>
+        <h1 id="webapp勉強会-第1回目-解説">WEBAPP勉強会 第1回目 解説</h1>
 <ul>
-<li><a href="#%E6%A6%82%E8%A6%81">概要</a></li>
+<li><a href="#webapp%E5%8B%89%E5%BC%B7%E4%BC%9A-%E7%AC%AC1%E5%9B%9E%E7%9B%AE-%E8%A7%A3%E8%AA%AC">WEBAPP勉強会 第1回目 解説</a>
+<ul>
 <li><a href="#%E3%83%97%E3%83%AD%E3%82%B8%E3%82%A7%E3%82%AF%E3%83%88%E4%BD%9C%E6%88%90">プロジェクト作成</a>
 <ul>
 <li><a href="#%E8%B5%B7%E5%8B%95%E3%81%99%E3%82%8B">起動する</a></li>
@@ -44,19 +45,25 @@
 <ul>
 <li><a href="#%E5%AE%9F%E7%BF%92%E7%94%A8%E3%83%9A%E3%83%BC%E3%82%B8%E3%81%AE%E8%BF%BD%E5%8A%A0">実習用ページの追加</a></li>
 <li><a href="#%E3%83%A1%E3%83%8B%E3%83%A5%E3%83%BC%E3%81%AE%E8%BF%BD%E5%8A%A0">メニューの追加</a></li>
+<li><a href="#%E5%8F%82%E8%80%83%E3%81%BE%E3%81%A7%E3%81%AB">参考までに</a></li>
 </ul>
 </li>
 <li><a href="#webapp-%E3%82%BD%E3%83%BC%E3%82%B9%E3%81%AE%E5%8F%96%E5%BE%97">webapp ソースの取得</a>
 <ul>
-<li><a href="#history%E3%81%8B%E3%82%89%E3%82%BD%E3%83%BC%E3%82%B9%E3%82%92%E5%8F%96%E5%BE%97">historyからソースを取得</a></li>
+<li><a href="#history%E3%81%8B%E3%82%89%E5%9C%A7%E7%B8%AE%E3%82%BD%E3%83%BC%E3%82%B9%E3%82%92%E5%8F%96%E5%BE%97">historyから圧縮ソースを取得</a></li>
 <li><a href="#git-hub-%E3%81%8B%E3%82%89%E3%82%BD%E3%83%BC%E3%82%B9%E3%82%92%E5%8F%96%E5%BE%97">git hub からソースを取得</a></li>
 <li><a href="#%E3%83%A2%E3%82%B8%E3%83%A5%E3%83%BC%E3%83%AB%E3%83%80%E3%82%A6%E3%83%B3%E3%83%AD%E3%83%BC%E3%83%89">モジュールダウンロード</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
 <hr>
 <h2 id="プロジェクト作成">プロジェクト作成</h2>
 <p>作業ディレクトリで下記のように入力します。</p>
+<p>今回はテザリング使用しないとモジュールがダウンロードできないので、一旦ベースを作成したものから始めます。</p>
+<p>右のリンクからダウンロードしてください。　<a href="https://dilsrv.sharepoint.com/sites/2390/Shared%20Documents/%E5%8B%89%E5%BC%B7%E4%BC%9A/WEBAPP/50_ETC/app/webapp-base.zip">&lt;ベースのダウンロード&gt;</a></p>
+<p>以下は、コマンドラインからプロジェクトを作成する方法です。</p>
 <pre><code><code><div>CMD&gt; npx create-nuxt-app webapp
 </div></code></code></pre>
 <p>いくつかの質問に答えていきます。</p>
@@ -65,6 +72,7 @@
 <li>package manager: <strong>Yarn</strong></li>
 <li>I framework: <strong>Element</strong></li>
 <li>Nuxt.js modules: <strong>Axios</strong></li>
+<li>linting tools: <strong>ESLint, Prettier</strong></li>
 <li>rendering mode: <strong>Single Page App</strong></li>
 </ul>
 <pre><code><code><div>create-nuxt-app v2.15.0
@@ -99,7 +107,7 @@ i Listening on: http://localhost:3000/
 <pre><code><code><div>http://localhost:3000/
 </div></code></code></pre>
 <p>無事、画面が表示されたでしょうか？</p>
-<p><img src="images/ch11-01.png" alt=""></p>
+<p><img src="https://hiszuk.github.io/webapp/images/ch11-01.png" alt=""></p>
 <p>終了するにはコマンドラインから <strong><code>Ctrl+C</code></strong> を入力します。</p>
 <h2 id="nuxtの解説">NUXTの解説</h2>
 <h3 id="nuxtのフォルダ構成について">NUXTのフォルダ構成について</h3>
@@ -122,9 +130,56 @@ i Listening on: http://localhost:3000/
     +- pages/index.vue
         +- componets/Logo.vue
 </div></code></code></pre>
-<p><img src="images/ch11-02.png" alt=""></p>
+<p>テンプレートのソースコード <code>layouts/default.vue</code> で確認します。</p>
+<pre><code class="language-html"><div><span class="hljs-tag">&lt;<span class="hljs-name">template</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">nuxt</span> /&gt;</span>    ... このタグにpages/内のページが読み込まれます。
+  <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">template</span>&gt;</span>
+</div></code></pre>
+<p><code>pages/index.vue</code> を確認します。<br/>
+先ほどの <code>&lt;nuxt /&gt;</code> 部分に下記の <code>&lt;template&gt;~&lt;/template&gt;</code> が展開されます。</p>
+<pre><code class="language-html"><div><span class="hljs-tag">&lt;<span class="hljs-name">template</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"container"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">logo</span> /&gt;</span>        ... components/logo.vue のコンポーネントが展開されます。
+      <span class="hljs-tag">&lt;<span class="hljs-name">h1</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"title"</span>&gt;</span>
+        webapp
+      <span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">h2</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"subtitle"</span>&gt;</span>
+        My first NUXT
+      <span class="hljs-tag">&lt;/<span class="hljs-name">h2</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"links"</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"https://nuxtjs.org/"</span> <span class="hljs-attr">target</span>=<span class="hljs-string">"_blank"</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"button--green"</span>&gt;</span>
+          Documentation
+        <span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"https://github.com/nuxt/nuxt.js"</span> <span class="hljs-attr">target</span>=<span class="hljs-string">"_blank"</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"button--grey"</span>&gt;</span>
+          GitHub
+        <span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">template</span>&gt;</span>
+</div></code></pre>
+<p>このように、ページの構成要素を分解し、階層構造を持ったコンポーネントに分解することで、
+共通性の高い部品・処理を再利用できるようになります。<br/>
+また、ElementUIのようなUIフレームワークを導入すると、汎用性・機能性の高い部品を簡単に組み込むことができます。<br/>
+さらに、それらを組み合わせて、例えばファイルアップロード用のダイアログを作れば、その部品を使うだけで、サーバーにファイルをアップロードするところまではコーディングレスで実現することさえ出来ます。<br/>
+コンポーネント設計をうまく行うことで、非常に高い生産性を実現する事が出来ます。(設計が難しいですが...)</p>
+<p>ページ内で使用するコンポーネントは、 <code>&lt;script&gt;~&lt;/script&gt;</code> 部分で利用を宣言します。</p>
+<pre><code class="language-JavaScript"><div>&lt;script&gt;
+<span class="hljs-keyword">import</span> Logo <span class="hljs-keyword">from</span> <span class="hljs-string">'~/components/Logo.vue'</span>    ...   コンポーネントの実体
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> {
+  <span class="hljs-attr">components</span>: {
+    Logo      ... 何というタグで利用するかを宣言
+  }
+}
+&lt;<span class="hljs-regexp">/script&gt;
+</span></div></code></pre>
+<p><img src="https://hiszuk.github.io/webapp/images/ch11-02.png" alt=""></p>
 <h3 id="vueの構成について">Vueの構成について</h3>
-<p>index.vueを参考に、Vueの構成について解説します。</p>
+<p>Vueの構成についてまとめると、以下のようになります。</p>
 <pre><code class="language-html"><div><span class="hljs-tag">&lt;<span class="hljs-name">template</span>&gt;</span>
     :           画面に表示する内容をタグ形式で表現します
 <span class="hljs-tag">&lt;/<span class="hljs-name">template</span>&gt;</span>
@@ -138,9 +193,12 @@ i Listening on: http://localhost:3000/
     :           画面表示する要素の色や大きさ、配置をCSSで指定します
 <span class="hljs-tag">&lt;/<span class="hljs-name">stye</span>&gt;</span>
 </span></div></code></pre>
+<p>画面のデザインを意図した通りに作りこむには、CSSの知識も必要になります。</p>
 <h3 id="リアクティブとは">リアクティブとは？</h3>
 <p>NUXTのベースであるVueの特徴 <strong>「リアクティブ」</strong> の概念について初期ページに手を加えて確認します。<br/>
 リアクティブとは簡単に言えば、「変化する変数の内容をリアルタイムに画面表示する」ものです。</p>
+<p>これにより、例えばテーブルのデータとしてバインドした変数に、RESTAPIから取得した内容を渡してやると、即座にデータが反映されるようになります。</p>
+<p>どのような感じなのか、簡単な例で見てみましょう。</p>
 <p>h2要素の&quot;My first NUX&quot;の下に、次のように要素を追加します。</p>
 <pre><code class="language-html"><div><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"links"</span>&gt;</span>
   <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>{{ message }}<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
@@ -184,10 +242,17 @@ i Listening on: http://localhost:3000/
 </div></code></pre>
 <p>参考URL: ElementUI/Layout<br/>
 <a href="https://element.eleme.io/#/en-US/component/layout">https://element.eleme.io/#/en-US/component/layout</a></p>
+<p>ElementUIのグリッドシステムは、行を <code>&lt;el-row&gt;</code> で表現し、その行中での列を <code>&lt;el-col&gt;</code> として表現します。<br/>
+行内を24個のグリッドと考えて、spanの合計が24になるようにレイアウトします。(足りなくても問題ないです)。<br/>
+上記の例では、2:20:2に3列作成しています。<br/>
+また、ページ上部に少し余裕を持たせるために、CSSで次のようにスタイル指定しています。<br/>
+<code>style=&quot;margin-top: 2rem;&quot;</code> <br/>
+共通部品として作成する場合は、<code>&lt;style&gt;~&lt;/style&gt;</code> 内に記述するほうが良いです。</p>
 <h3 id="メニューの追加">メニューの追加</h3>
 <p>Single Page Application ですが、一応メニューも追加してみます。</p>
+<p>メニューシステムは各ページが共通して利用するため、default.vueで定義します。</p>
 <p><strong>「layout/default.vue」</strong> ElementUIの水平メニューを追加します。</p>
-<p>&lt;template&gt;内に&lt;el-menu ..&gt; ~ &lt;/el-menu&gt; 部分を追加</p>
+<p><code>&lt;templeta&gt;~&lt;/template&gt;</code> 内に、<code>&lt;el-menu&gt;~&lt;/el-menu&gt;</code> 部分を追加します。</p>
 <pre><code class="language-html"><div><span class="hljs-tag">&lt;<span class="hljs-name">template</span>&gt;</span>
   <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-name">el-menu</span> <span class="hljs-attr">:default-active</span>=<span class="hljs-string">"activeIndex"</span> <span class="hljs-attr">mode</span>=<span class="hljs-string">"horizontal"</span> <span class="hljs-attr">router</span>&gt;</span>
@@ -198,6 +263,9 @@ i Listening on: http://localhost:3000/
   <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
 <span class="hljs-tag">&lt;/<span class="hljs-name">template</span>&gt;</span>
 </div></code></pre>
+<p><code>router</code> オプションを定義することで、indexに指定したページに遷移できるようになります。<br/>
+<code>default-active</code> が、現在選択中のメニューとなります。ここでは、その属性に、<code>activeIndex</code> 変数の内容を設定しています。</br>
+これは、遷移先のページメニューを選択状態にするために必要になります。</p>
 <p>script部分に下記を追加</p>
 <pre><code class="language-javascript"><div>&lt;script&gt;
 <span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> {
@@ -214,17 +282,27 @@ i Listening on: http://localhost:3000/
 </span></div></code></pre>
 <p>参考URL: ElementUI/Navimenu<br/>
 <a href="https://element.eleme.io/#/en-US/component/menu">https://element.eleme.io/#/en-US/component/menu</a></p>
+<p><code>data() {...}</code> 内にこのページで利用する変数を定義していきます。<br/>
+現在のページを表す変数 <code>activeIndex</code> を初期値 '/' で定義しています。<br/>
+<code>mounted() {...}</code> でページがレンダリングされた後処理として、<code>this.$route.path</code> を取得し、<code>activeIndex</code> に設定しています。<br/>
+<code>this.$route.path</code>は現在のページのパスを表し、'/', '/items', '/about' などが入ります。<br/></p>
+<p><img src="https://hiszuk.github.io/webapp/images/ch11-03.png" alt=""></p>
 <p>比較的少ない手間で、メニューバーが追加できることを体験頂きました。</p>
-<p><img src="images/ch11-03.png" alt=""></p>
-<h2 id="ch1-1-ソースの取得">ch1-1 ソースの取得</h2>
-<h3 id="historyからソースを取得">historyからソースを取得</h3>
-<p>ソースファイルフォルダ：10_WEBAPP\history\ch1-1</p>
+<h3 id="参考までに">参考までに</h3>
+<p>NUXTはライフサイクルのどの部分で処理したいかによって、先の<code>mounted</code>のようなポイントがあります。</p>
+<p>Nuxのライフサイクル： <a href="http://lab.astamuse.co.jp/entry/2019/05/29/114500">Nuxt.jsのライフサイクル覚書</a>より<br/>
+<img src="https://hiszuk.github.io/webapp/images/nuxt.jpg" alt=""></p>
+<h2 id="webapp-ソースの取得">webapp ソースの取得</h2>
+<h3 id="historyから圧縮ソースを取得">historyから圧縮ソースを取得</h3>
+<p>ソースファイル：<a href="https://dilsrv.sharepoint.com/sites/2390/Shared%20Documents/%E5%8B%89%E5%BC%B7%E4%BC%9A/WEBAPP/50_ETC/app/ch1-1.zip">勉強会&gt;WEBAPP&gt;50_ETC&gt;app&gt;ch1-1.zip</a></p>
+<p>zipファイルは必要モジュールを同梱していますので、展開後、直ぐに「<code>yarn dev</code>」頂けます。(おすすめ)</p>
 <h3 id="git-hub-からソースを取得">git hub からソースを取得</h3>
-<p>今回(ch1-1終了時点)のソースを取得するには、以下のコマンドを実行します。</p>
-<pre><code><code><div>git clone https://github.com/hiszuk/webapp.git -b ch1-1 --depth 1 webapp
+<p>git hub使ってみたい人向け(gitインストールが必要)<br/>
+今回(webapp終了時点)のソースを取得するには、以下のコマンドを実行します。</p>
+<pre><code><code><div>git clone https://github.com/hiszuk/webapp.git -b webapp --depth 1 webapp
 </div></code></code></pre>
 <h3 id="モジュールダウンロード">モジュールダウンロード</h3>
-<p>画面を起動するには必要モジュールのダウンロードが必要です。</p>
+<p>git hub から落とした場合は、画面を起動するには必要モジュールのダウンロードが必要です。</p>
 <pre><code><code><div>yarn install
 </div></code></code></pre>
 <p>ダウンロードできない場合、以下のフォルダよりnode_modulesをコピーしてください。</p>
