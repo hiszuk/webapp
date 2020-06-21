@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <title>WEBAPP勉強会 第4回目 解説</title>
+        <style>
+</style>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/katex.min.css" integrity="sha384-yFRtMMDnQtDRO8rLpMIKrtPCD5jdktao2TV19YiZYWMDkUR5GQZR/NOVTdquEx1j" crossorigin="anonymous">
+<link href="https://cdn.jsdelivr.net/npm/katex-copytex@latest/dist/katex-copytex.min.css" rel="stylesheet" type="text/css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/markdown.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/highlight.css">
+<style>
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe WPC', 'Segoe UI', system-ui, 'Ubuntu', 'Droid Sans', sans-serif;
+                font-size: 14px;
+                line-height: 1.6;
+            }
+        </style>
+        <style>
+.task-list-item { list-style-type: none; } .task-list-item-checkbox { margin-left: -20px; vertical-align: middle; }
+</style>
+        
+        <script src="https://cdn.jsdelivr.net/npm/katex-copytex@latest/dist/katex-copytex.min.js"></script>
+        
+    </head>
+    <body class="vscode-light">
+        <h1 id="webapp勉強会-第4回目-解説">WEBAPP勉強会 第4回目 解説</h1>
+<ul>
+<li><a href="#webapp%E5%8B%89%E5%BC%B7%E4%BC%9A-%E7%AC%AC4%E5%9B%9E%E7%9B%AE-%E8%A7%A3%E8%AA%AC">WEBAPP勉強会 第4回目 解説</a>
+<ul>
+<li><a href="#%E3%83%A1%E3%83%83%E3%82%BB%E3%83%BC%E3%82%B8%E3%83%9C%E3%83%83%E3%82%AF%E3%82%B9%E5%AE%9F%E8%A3%85">メッセージボックス実装</a>
+<ul>
+<li><a href="#this%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6">this.$???について</a></li>
+<li><a href="#then--catch--%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6">then ~ catch ~ について</a></li>
+</ul>
+</li>
+<li><a href="#%E3%83%A1%E3%83%83%E3%82%BB%E3%83%BC%E3%82%B8%E3%82%92%E8%B5%B7%E5%8B%95%E3%81%99%E3%82%8B%E9%83%A8%E5%88%86%E3%81%AE%E5%AE%9F%E8%A3%85">メッセージを起動する部分の実装</a></li>
+<li><a href="#%E6%9A%AB%E5%AE%9A%E3%81%AE%E5%89%8A%E9%99%A4%E5%87%A6%E7%90%86%E3%82%92%E5%AE%9F%E8%A3%85">暫定の削除処理を実装</a>
+<ul>
+<li><a href="#id%E3%82%92%E6%8C%87%E5%AE%9A%E3%81%97%E3%81%A6%E3%83%87%E3%83%BC%E3%82%BF%E3%82%92%E5%89%8A%E9%99%A4%E3%81%99%E3%82%8B%E5%87%A6%E7%90%86%E3%82%92%E5%AE%9F%E8%A3%85">idを指定してデータを削除する処理を実装</a></li>
+<li><a href="#%E5%89%8A%E9%99%A4%E5%87%A6%E7%90%86%E3%82%92%E5%91%BC%E3%81%B3%E5%87%BA%E3%81%99%E9%83%A8%E5%88%86%E3%82%92%E5%AE%9F%E8%A3%85">削除処理を呼び出す部分を実装</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="メッセージボックス実装">メッセージボックス実装</h2>
+<p>削除確認のためのメッセージボックスを実装します。</p>
+<p>参考URL： <a href="https://element.eleme.io/#/en-US/component/message-box#confirm">https://element.eleme.io/#/en-US/component/message-box#confirm</a></p>
+<p>上記を元に選択行の削除確認を行うメッセージボックスをmethods: {} 内に実装します。</p>
+<pre><code class="language-JavaScript"><div>confirmDelete() {
+  <span class="hljs-keyword">const</span> row = <span class="hljs-keyword">this</span>.tableData[<span class="hljs-keyword">this</span>.rowNumber]
+  <span class="hljs-keyword">const</span> target = <span class="hljs-string">`<span class="hljs-subst">${row.id}</span>:<span class="hljs-subst">${row.title}</span>`</span>
+  <span class="hljs-keyword">const</span> msg = <span class="hljs-string">`<span class="hljs-subst">${target}</span> を削除します。削除後は元に戻せませんが、実行してよろしいですか?`</span>
+  <span class="hljs-keyword">this</span>.$confirm(msg, <span class="hljs-string">'Warning'</span>, {
+    <span class="hljs-attr">confirmButtonText</span>: <span class="hljs-string">'削除する'</span>,
+    <span class="hljs-attr">cancelButtonText</span>: <span class="hljs-string">'やめる'</span>,
+    <span class="hljs-attr">type</span>: <span class="hljs-string">'warning'</span>
+  })
+    .then(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+      <span class="hljs-comment">// ToDo: 削除処理を起動</span>
+      <span class="hljs-keyword">this</span>.$message({
+        <span class="hljs-attr">type</span>: <span class="hljs-string">'success'</span>,
+        <span class="hljs-attr">message</span>: <span class="hljs-string">`<span class="hljs-subst">${target}</span> : 削除が成功しました。`</span>,
+        <span class="hljs-attr">showClose</span>: <span class="hljs-literal">true</span>,
+        <span class="hljs-attr">duration</span>: <span class="hljs-number">5000</span>
+      })
+    })
+    .catch(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+      <span class="hljs-keyword">this</span>.$message({
+        <span class="hljs-attr">type</span>: <span class="hljs-string">'info'</span>,
+        <span class="hljs-attr">message</span>: <span class="hljs-string">'削除を中止しました。'</span>
+      })
+    })
+}
+</div></code></pre>
+<h3 id="thisについて">this.$???について</h3>
+<p>thisとは？　現在のVueインスタンスを表します。<br/>
+data(){ } 内で定義した変数・オブジェクトについてアクセスする際には <strong>今のインスタンスの</strong> という意味でthisを付けます。</p>
+<p>では、$confirmや$messageはどういった意味があるのでしょうか？<br/>
+これらは、plugin/element-ui.js　でVueインスタンスに組み込まれた関数を使う際にthis.$???でコールします。<br/>
+※もちろんVueに組み込み済みの例えば$routeや$storeなどもあります。</p>
+<p>例えば、アプリケーションで共通の確認ダイアログを作成したい場合、上記のようなコードを書いたJavaScriptファイルをpluginフォルダに配置し、各ページからは、<code>this.$confirmDelete()</code> として呼び出すことで部品化し、開発効率化を図ります。</p>
+<h3 id="then--catch--について">then ~ catch ~ について</h3>
+<p>confirmの仕様として、ボタンをクリックした後処理を分岐できるようになっています。</p>
+<pre><code class="language-JavaScript"><div><span class="hljs-keyword">this</span>.$confirm(...).then( confirm時の処理 ).catch( cancel時の処理 )
+</div></code></pre>
+<h2 id="メッセージを起動する部分の実装">メッセージを起動する部分の実装</h2>
+<p>削除処理(<code>handlleDelete</code>)の際にメッセージボックスを起動するよう修正します。</p>
+<pre><code class="language-JavaScript"><div>handleDelete(index, row) {
+  <span class="hljs-keyword">this</span>.rowNumber = index
+  <span class="hljs-keyword">this</span>.confirmDelete()
+},
+</div></code></pre>
+<p>削除ボタンクリック後、下図のようなメッセージボックスが表示されます。</p>
+<p><img src="https://hiszuk.github.io/webapp/images/ch14-01.png" alt=""></p>
+<hr>
+<h2 id="暫定の削除処理を実装">暫定の削除処理を実装</h2>
+<h3 id="idを指定してデータを削除する処理を実装">idを指定してデータを削除する処理を実装</h3>
+<p>将来はREST APIをコールするように変更しますが、暫定的にオンメモリのデータを削除する処理(<code>deleteItem</code>)をmethods: {} 内に作成します。</p>
+<pre><code class="language-JavaScript"><div>deleteItem(id) {
+  <span class="hljs-comment">// ToDo: REST API削除処理呼び出し</span>
+  <span class="hljs-comment">// Dummy delete</span>
+  <span class="hljs-keyword">this</span>.tableData = <span class="hljs-keyword">this</span>.tableData.filter(<span class="hljs-function">(<span class="hljs-params">data</span>) =&gt;</span> data.id !== id)
+},
+</div></code></pre>
+<p>上記では、引数のidに一致しない要素で新たに配列を作り、tableDataにセットしています。</p>
+<h3 id="削除処理を呼び出す部分を実装">削除処理を呼び出す部分を実装</h3>
+<p>先ほど実装した<code>confirmDelete()</code> のコメント部分を、<code>deleteItem</code> をコールするよう変更します。</p>
+<pre><code class="language-JavaScript"><div>.then(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+  <span class="hljs-keyword">this</span>.deleteItem(row.id)
+  <span class="hljs-keyword">this</span>.$message({
+    <span class="hljs-attr">type</span>: <span class="hljs-string">'success'</span>,
+    <span class="hljs-attr">message</span>: <span class="hljs-string">`<span class="hljs-subst">${target}</span> : 削除が成功しました。`</span>,
+    <span class="hljs-attr">showClose</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">duration</span>: <span class="hljs-number">5000</span>
+  })
+})
+</div></code></pre>
+<p>確認ダイアログの「削除する」ボタンをクリックすると、一覧表からデータは削除されるようになりましたか？</p>
+
+    </body>
+    </html>
