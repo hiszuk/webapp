@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <title>WEBAPP勉強会 第5回目 解説</title>
+        <style>
+</style>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/katex.min.css" integrity="sha384-yFRtMMDnQtDRO8rLpMIKrtPCD5jdktao2TV19YiZYWMDkUR5GQZR/NOVTdquEx1j" crossorigin="anonymous">
+<link href="https://cdn.jsdelivr.net/npm/katex-copytex@latest/dist/katex-copytex.min.css" rel="stylesheet" type="text/css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/markdown.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/highlight.css">
+<style>
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe WPC', 'Segoe UI', system-ui, 'Ubuntu', 'Droid Sans', sans-serif;
+                font-size: 14px;
+                line-height: 1.6;
+            }
+        </style>
+        <style>
+.task-list-item { list-style-type: none; } .task-list-item-checkbox { margin-left: -20px; vertical-align: middle; }
+</style>
+        
+        <script src="https://cdn.jsdelivr.net/npm/katex-copytex@latest/dist/katex-copytex.min.js"></script>
+        
+    </head>
+    <body class="vscode-light">
+        <h1 id="webapp勉強会-第5回目-解説">WEBAPP勉強会 第5回目 解説</h1>
+<ul>
+<li><a href="#webapp%E5%8B%89%E5%BC%B7%E4%BC%9A-%E7%AC%AC5%E5%9B%9E%E7%9B%AE-%E8%A7%A3%E8%AA%AC">WEBAPP勉強会 第5回目 解説</a>
+<ul>
+<li><a href="#%E6%96%B0%E8%A6%8F%E7%99%BB%E9%8C%B2%E3%83%9C%E3%82%BF%E3%83%B3%E3%82%92%E9%85%8D%E7%BD%AE">新規登録ボタンを配置</a></li>
+<li><a href="#%E6%96%B0%E8%A6%8F%E7%99%BB%E9%8C%B2%E3%83%80%E3%82%A4%E3%82%A2%E3%83%AD%E3%82%B0%E3%82%92%E9%96%8B%E3%81%8F%E5%87%A6%E7%90%86">新規登録ダイアログを開く処理</a></li>
+<li><a href="#%E6%96%B0%E8%A6%8F%E7%99%BB%E9%8C%B2%E6%9C%AC%E4%BD%93%E3%81%AE%E5%AE%9F%E8%A3%85">新規登録本体の実装</a>
+<ul>
+<li><a href="#isupdate%E5%A4%89%E6%95%B0%E5%AE%9A%E7%BE%A9">isUpdate変数定義</a></li>
+<li><a href="#handleedit%E3%81%ABisupdate%E8%A8%AD%E5%AE%9A%E3%82%92%E8%BF%BD%E5%8A%A0">handleEditにisUpdate設定を追加</a></li>
+<li><a href="#handlenew%E3%81%ABisupdate%E8%A8%AD%E5%AE%9A%E3%81%A8id%E3%81%AE%E3%83%80%E3%83%9F%E3%83%BC%E3%82%92%E8%BF%BD%E5%8A%A0">handleNewにisUpdate設定とidのダミーを追加</a></li>
+<li><a href="#doexecute%E3%81%AB%E5%87%A6%E7%90%86%E5%88%86%E5%B2%90%E3%82%92%E8%BF%BD%E5%8A%A0">doExecuteに処理分岐を追加</a></li>
+<li><a href="#%E6%96%B0%E8%A6%8F%E7%99%BB%E9%8C%B2%E5%87%A6%E7%90%86registeritem%E3%81%AE%E3%83%80%E3%83%9F%E3%83%BC%E3%82%92%E5%AE%9F%E8%A3%85%E3%81%97%E3%81%BE%E3%81%99">新規登録処理(<code>registerItem</code>)のダミーを実装します</a></li>
+</ul>
+</li>
+<li><a href="#conputed%E3%81%A7%E8%A1%A8%E7%A4%BA%E3%82%92%E5%88%B6%E5%BE%A1">conputedで表示を制御</a></li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="新規登録ボタンを配置">新規登録ボタンを配置</h2>
+<p>参考URL：　<a href="https://element.eleme.io/#/en-US/component/button#icon-button">https://element.eleme.io/#/en-US/component/button#icon-button</a></p>
+<p>上記を参考にして、新規登録ダイアログを表示するボタンを絞り込みの右側に配置します。</p>
+<pre><code class="language-html"><div><span class="hljs-comment">&lt;!-- 検索入力 --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">el-input</span> <span class="hljs-attr">v-model</span>=<span class="hljs-string">"search"</span> <span class="hljs-attr">size</span>=<span class="hljs-string">"small"</span> <span class="hljs-attr">placeholder</span>=<span class="hljs-string">"検索文字列を入力"</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">template</span> <span class="hljs-attr">slot</span>=<span class="hljs-string">"prepend"</span>&gt;</span>内容で絞り込む<span class="hljs-tag">&lt;/<span class="hljs-name">template</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">el-input</span>&gt;</span>
+</div></code></pre>
+<p>検索入力の<code>&lt;el-input&gt; ~ &lt;/el-input&gt;</code>の部分に新規入力のボタンを追加します。<br/>
+普通に追加するだけだと、レイアウトが崩れてしまうので、el-rowとel-colを使ってレイアウトを整えます。</p>
+<p>以下、簡単に構造を書きます。</p>
+<pre><code class="language-html"><div><span class="hljs-tag">&lt;<span class="hljs-name">el-row</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">el-col</span> <span class="hljs-attr">:span</span>=<span class="hljs-string">"20"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">el-input</span>&gt;</span> ~ <span class="hljs-tag">&lt;/<span class="hljs-name">el-input</span>&gt;</span>    ... 元の検索入力の部分
+  <span class="hljs-tag">&lt;/<span class="hljs-name">el-col</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">el-col</span> <span class="hljs-attr">:span</span>=<span class="hljs-string">"4"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">el-button</span>&gt;</span> ~ <span class="hljs-tag">&lt;/<span class="hljs-name">el-button</span>&gt;</span>  ... 新規登録ボタン
+  <span class="hljs-tag">&lt;/<span class="hljs-name">elcol</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">el-row</span>&gt;</span>
+</div></code></pre>
+<p>上記の構造になるように検索入力部分を以下のように変更します。</p>
+<pre><code class="language-html"><div><span class="hljs-comment">&lt;!-- 検索入力 --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">el-row</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">el-col</span> <span class="hljs-attr">:span</span>=<span class="hljs-string">"20"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">el-input</span> <span class="hljs-attr">v-model</span>=<span class="hljs-string">"search"</span> <span class="hljs-attr">size</span>=<span class="hljs-string">"small"</span> <span class="hljs-attr">placeholder</span>=<span class="hljs-string">"検索文字列を入力"</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">template</span> <span class="hljs-attr">slot</span>=<span class="hljs-string">"prepend"</span>&gt;</span>内容で絞り込む<span class="hljs-tag">&lt;/<span class="hljs-name">template</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">el-input</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">el-col</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">el-col</span> <span class="hljs-attr">:span</span>=<span class="hljs-string">"4"</span> <span class="hljs-attr">style</span>=<span class="hljs-string">"text-align: center"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">el-button</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"success"</span> <span class="hljs-attr">icon</span>=<span class="hljs-string">"el-icon-circle-plus-outline"</span> <span class="hljs-attr">size</span>=<span class="hljs-string">"small"</span> @<span class="hljs-attr">click</span>=<span class="hljs-string">"handleNew()"</span>&gt;</span>新規登録<span class="hljs-tag">&lt;/<span class="hljs-name">el-button</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">el-col</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">el-row</span>&gt;</span>
+</div></code></pre>
+<h2 id="新規登録ダイアログを開く処理">新規登録ダイアログを開く処理</h2>
+<p>新規登録ボタンクリックでダイアログを表示する処理を実装します。</p>
+<p>編集で作成したダイアログを利用します。<br/>
+<code>methods: {}</code> 内の<code>handleDelete()</code>の下に<code>handleNew()</code> を追加します。</p>
+<p>その際にはformを初期化します。</p>
+<pre><code class="language-JavaScript"><div>handleNew() {
+  <span class="hljs-keyword">this</span>.form.id = <span class="hljs-literal">null</span>
+  <span class="hljs-keyword">this</span>.form.title = <span class="hljs-string">''</span>
+  <span class="hljs-keyword">this</span>.form.content = <span class="hljs-string">''</span>
+  <span class="hljs-keyword">this</span>.form.status = <span class="hljs-string">'TODO'</span>
+  <span class="hljs-keyword">this</span>.dialogFormVisible = <span class="hljs-literal">true</span>
+},
+</div></code></pre>
+<p>これで「新規作成」ボタンをクリックしたら、新規登録用のダイアログが表示されるようになります。</p>
+<p><img src="https://hiszuk.github.io/webapp/images/ch15-01.png" alt=""></p>
+<hr>
+<h2 id="新規登録本体の実装">新規登録本体の実装</h2>
+<p>ダイアログで入力された内容を登録する処理を実装します。</p>
+<p>新規登録のダイアログは、編集と共用となりますので、「確定」ボタンをクリックした際の動作を、編集と新規登録で分ける必要があります。この機能を実現するために、<code>isUpdate</code> という変数を導入します。</p>
+<p>編集時は<code>isUpdate</code>を<code>true</code>とし、新規登録時は<code>isUpdate</code>を<code>false</code>とします。これにより、<code>doExecute()</code>内で処理を分岐できるようします。</p>
+<ol>
+<li>編集ボタンクリック時
+<ol>
+<li><code>handleEdit</code>内で<code>isUpdate</code>を<code>true</code>にする</li>
+<li>ダイアログを表示する</li>
+</ol>
+</li>
+<li>新規作成ボタンクリック時
+<ol>
+<li><code>handleNew</code>内で<code>isUpdate</code>を<code>false</code>にする</li>
+<li>ダイアログを表示する</li>
+</ol>
+</li>
+<li>ダイアログの「確定」ボタンクリック</li>
+<li><code>doExecute()</code>がコールされる
+<ol>
+<li><code>isUpdate</code>が<code>true</code>の場合
+<ol>
+<li><code>updateItem</code>をコール</li>
+</ol>
+</li>
+<li><code>isUpdate</code>が<code>true</code>の場合
+<ol>
+<li><code>insetItem</code>をコール</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+<h3 id="isupdate変数定義">isUpdate変数定義</h3>
+<p><code>data() {...}</code> 内の<code>dialogFormVisible</code>の下に<code>isUpdate</code>を追加します。<br/>
+また、REST APIを繋ぐまでダミーとしてクライアント側処理を行うため<code>nextId</code>も追加します。</p>
+<pre><code class="language-JavaScript"><div>  :
+formLabelWidth: <span class="hljs-string">'150px'</span>,
+<span class="hljs-attr">dialogFormVisible</span>: <span class="hljs-literal">false</span>,
+<span class="hljs-attr">isUpdate</span>: <span class="hljs-literal">true</span>,
+<span class="hljs-attr">nextId</span>: <span class="hljs-number">8</span>,
+<span class="hljs-attr">rowNumber</span>: <span class="hljs-string">''</span>,
+  :
+</div></code></pre>
+<h3 id="handleeditにisupdate設定を追加">handleEditにisUpdate設定を追加</h3>
+<pre><code class="language-JavaScript"><div>handleEdit(index, row) {
+  <span class="hljs-keyword">this</span>.isUpdate = <span class="hljs-literal">true</span>
+  <span class="hljs-keyword">this</span>.rowNumber = index
+  <span class="hljs-keyword">this</span>.fetchKey(row.id)
+  <span class="hljs-keyword">this</span>.form = { ...this.item }
+  <span class="hljs-keyword">this</span>.dialogFormVisible = <span class="hljs-literal">true</span>
+},
+</div></code></pre>
+<h3 id="handlenewにisupdate設定とidのダミーを追加">handleNewにisUpdate設定とidのダミーを追加</h3>
+<pre><code class="language-JavaScript"><div>handleNew() {
+  <span class="hljs-keyword">this</span>.isUpdate = <span class="hljs-literal">false</span>
+  <span class="hljs-keyword">this</span>.form.id = <span class="hljs-literal">null</span>
+  <span class="hljs-keyword">this</span>.form.title = <span class="hljs-string">''</span>
+  <span class="hljs-keyword">this</span>.form.content = <span class="hljs-string">''</span>
+  <span class="hljs-keyword">this</span>.form.status = <span class="hljs-string">'TODO'</span>
+  <span class="hljs-keyword">this</span>.dialogFormVisible = <span class="hljs-literal">true</span>
+  <span class="hljs-comment">// 以下はREST APIと接続するまでのダミー処理</span>
+  <span class="hljs-comment">// idはREST APIでは自動採番の予定</span>
+  <span class="hljs-keyword">this</span>.form.id = <span class="hljs-keyword">this</span>.nextId
+},
+</div></code></pre>
+<h3 id="doexecuteに処理分岐を追加">doExecuteに処理分岐を追加</h3>
+<pre><code class="language-JavaScript"><div>doExecute() {
+  <span class="hljs-keyword">this</span>.dialogFormVisible = <span class="hljs-literal">false</span>
+  <span class="hljs-comment">// 編集モード(isUpdate=true)の場合は更新処理</span>
+  <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.isUpdate) {
+    <span class="hljs-keyword">this</span>.updateItem(<span class="hljs-keyword">this</span>.form)
+  } <span class="hljs-keyword">else</span> {
+    <span class="hljs-keyword">this</span>.registerItem(<span class="hljs-keyword">this</span>.form)
+  }
+},
+</div></code></pre>
+<h3 id="新規登録処理registeritemのダミーを実装します">新規登録処理(<code>registerItem</code>)のダミーを実装します</h3>
+<pre><code class="language-JavaScript"><div>registerItem(param) {
+  <span class="hljs-comment">// ToDo: REST API登録処理呼び出し</span>
+  <span class="hljs-comment">// Dummiy insert</span>
+  <span class="hljs-keyword">const</span> item = { ...param }
+  <span class="hljs-keyword">this</span>.tableData.push(item)
+  <span class="hljs-keyword">this</span>.nextId++
+
+  <span class="hljs-keyword">const</span> target = <span class="hljs-string">`<span class="hljs-subst">${param.id}</span>:<span class="hljs-subst">${param.title}</span>`</span>
+  <span class="hljs-keyword">this</span>.$message({
+    <span class="hljs-attr">type</span>: <span class="hljs-string">'success'</span>,
+    <span class="hljs-attr">message</span>: <span class="hljs-string">`<span class="hljs-subst">${target}</span> : 登録が成功しました。`</span>,
+    <span class="hljs-attr">showClose</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">duration</span>: <span class="hljs-number">5000</span>
+  })
+},
+</div></code></pre>
+<p>本来はREST APIにparamを渡して登録処理を行う部分になります。<br/>
+idはREST APIでは自動採番になるので設定不要ですが、今はクライアントで設定必要なのでnextIdで管理します。</p>
+<p>いかがでしょうか？登録できたでしょうか？</p>
+<hr>
+<h2 id="conputedで表示を制御">conputedで表示を制御</h2>
+<p>最後に、新規登録と編集により、ダイアログタイトルを変える方法を紹介します。</p>
+<p>参考URL：<a href="https://jp.vuejs.org/v2/guide/computed.html">https://jp.vuejs.org/v2/guide/computed.html</a>
+  <a href="https://jp.vuejs.org/v2/guide/computed.html">算出プロパティ</a></p>
+<pre><code class="language-html"><div><span class="hljs-tag">&lt;<span class="hljs-name">el-dialog</span> <span class="hljs-attr">title</span>=<span class="hljs-string">"Todo 編集"</span> <span class="hljs-attr">:visible.sync</span>=<span class="hljs-string">"dialogFormVisible"</span>&gt;</span>
+</div></code></pre>
+<p>このダイアログタイトルを算出プロパティ<code>dialogTitle</code>に変更します。</p>
+<pre><code class="language-html"><div><span class="hljs-tag">&lt;<span class="hljs-name">el-dialog</span> <span class="hljs-attr">:title</span>=<span class="hljs-string">"dialogTitle"</span> <span class="hljs-attr">:visible.sync</span>=<span class="hljs-string">"dialogFormVisible"</span>&gt;</span>
+</div></code></pre>
+<p><code>data() {..}</code>の下に<code>computed: {..}</code>のブロックを追加します。</p>
+<pre><code class="language-JavaScript"><div>data() {
+
+},
+<span class="hljs-attr">computed</span>: {
+  dialogTitle() {
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.isUpdate ? <span class="hljs-string">'ToDo 編集'</span> : <span class="hljs-string">'ToDo 新規登録'</span>
+  }
+},
+</div></code></pre>
+<p><code>isUpdate</code>が<code>true</code>の場合は編集、それ以外の場合は新規登録と表示します。</p>
+<p><img src="https://hiszuk.github.io/webapp/images/ch15-02.png" alt=""></p>
+
+    </body>
+    </html>
