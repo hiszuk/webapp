@@ -42,7 +42,7 @@
     </el-row>
     <!-- 編集入力 Dialog -->
     <div>
-      <el-dialog title="Todo 編集" :visible.sync="dialogFormVisible">
+      <el-dialog :title="dialogTitle" :visible.sync="dialogFormVisible">
         <el-form :model="form">
           <el-form-item label="ID" :label-width="formLabelWidth">
             <el-input v-model="form.id" disabled></el-input>
@@ -144,6 +144,11 @@ export default {
       nextId: 8
     }
   },
+  computed: {
+    dialogTitle() {
+      return this.isUpdate ? 'ToDo 編集' : 'ToDo 新規登録'
+    }
+  },
   methods: {
     handleEdit(index, row) {
       this.isUpdate = true
@@ -210,6 +215,14 @@ export default {
       const item = { ...param }
       this.tableData.push(item)
       this.nextId++
+
+      const target = `${param.id}:${param.title}`
+      this.$message({
+        type: 'success',
+        message: `${target} : 登録が成功しました。`,
+        showClose: true,
+        duration: 5000
+      })
     },
     confirmDelete() {
       const row = this.tableData[this.rowNumber]
