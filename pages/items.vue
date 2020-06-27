@@ -80,56 +80,7 @@
 export default {
   data() {
     return {
-      tableData: [
-        {
-          id: '1',
-          title: 'WEBApplication作成',
-          content: 'NUXT.js+ElementUIでフロントエンドのWEBアプリを作成する',
-          status: 'DONE'
-        },
-        {
-          id: '2',
-          title: 'RESTfulAPI作成',
-          content: 'SpringBootを用いてRESTfulAPIを構築する',
-          status: 'DONE'
-        },
-        {
-          id: '3',
-          title: 'フロントエンドとバックエンドを結合',
-          content: 'NUXTのアプリからaxios経由でRESTAPIをコールしフロントとバックエンドを繋げる',
-          status: 'PROGRESS'
-        },
-        {
-          id: '4',
-          title: 'MySQLのDockerイメージを作成する',
-          content: 'DockerでRESTfulAPIでアクセスするMySQLのイメージを作成する',
-          status: 'PROGRESS'
-        },
-        {
-          id: '5',
-          title: 'バックエンドのDockerイメージを作成する',
-          content: 'Javaのイメージにバックエンドのjarをレイヤー化したイメージを作成する',
-          status: 'TODO'
-        },
-        {
-          id: '6',
-          title: 'フロントエンドのDockerイメージを作成する',
-          content: 'Node.jsからNUXTをインストールしWEBアプリをコピー後にbuildするイメージを作成する',
-          status: 'TODO'
-        },
-        {
-          id: '7',
-          title: 'Docker-composeでパッケージ化する',
-          content: 'フロントエンド・バックエンド・DBの3層をひとつのパッケージにまとめる',
-          status: 'TODO'
-        }
-      ],
-      item: {
-        id: null,
-        title: '',
-        content: '',
-        status: ''
-      },
+      tableData: [],
       search: '',
       formLabelWidth: '150px',
       dialogFormVisible: false,
@@ -140,8 +91,7 @@ export default {
         title: '',
         content: '',
         status: ''
-      },
-      nextId: 8
+      }
     }
   },
   computed: {
@@ -149,13 +99,16 @@ export default {
       return this.isUpdate ? 'ToDo 編集' : 'ToDo 新規登録'
     }
   },
+  mounted() {
+    this.fetchAll()
+  },
   methods: {
     handleEdit(index, row) {
       this.isUpdate = true
       this.rowNumber = index
-      this.fetchKey(row.id)
-      this.form = { ...this.item }
-      this.dialogFormVisible = true
+      this.fetchKey(row.id).then((res) => {
+        this.dialogFormVisible = true
+      })
     },
     handleDelete(index, row) {
       this.rowNumber = index
@@ -168,9 +121,6 @@ export default {
       this.form.content = ''
       this.form.status = 'TODO'
       this.dialogFormVisible = true
-      // 以下はREST APIと接続するまでのダミー処理
-      // idはREST APIでは自動採番の予定
-      this.form.id = this.nextId
     },
     doExecute() {
       this.dialogFormVisible = false
@@ -181,48 +131,88 @@ export default {
         this.registerItem(this.form)
       }
     },
-    fetchKey(id) {
-      // ToDo: REST APIのkey(row.id)検索し結果をitemにセットする
-      // Dummy select
-      const items = this.tableData.filter((data) => data.id === id)
-      this.item = { ...items[0] }
+    async fetchAll() {
+      await this.$axios.$get('/api/items/').then((res) => {
+        this.tableData = res
+      })
+    },
+    async fetchKey(id) {
+      await this.$axios.$get(`/api/items/${id}`).then((res) => {
+        this.form = res
+      })
     },
     updateItem(param) {
-      // ToDo: REST APIのアップデートを起動する
-      // Dummy update
-      this.tableData[this.rowNumber] = { ...param }
-
-      // 更新後の情報を取得しtableDataにセットする
-      this.fetchKey(param.id)
-      this.tableData[this.rowNumber] = { ...this.item }
-
       const target = `${param.id}:${param.title}`
-      this.$message({
-        type: 'success',
-        message: `${target} : 更新が成功しました。`,
-        showClose: true,
-        duration: 5000
+      this.$axios({
+        url: `/api/items/${param.id}`,
+        method: 'PUT',
+        data: param
       })
+        .then((res) => {
+          this.fetchAll()
+          this.$message({
+            type: 'success',
+            message: `${target} : 更新が成功しました。`,
+            showClose: true,
+            duration: 5000
+          })
+        })
+        .catch((err) => {
+          this.$message({
+            type: 'danger',
+            message: `${target} : 更新に失敗しました。: ${err}`,
+            showClose: true,
+            duration: 0
+          })
+        })
     },
     deleteItem(id) {
-      // ToDo: REST API削除処理呼び出し
-      // Dummy delete
-      this.tableData = this.tableData.filter((data) => data.id !== id)
+      const target = `${id}`
+      this.$axios
+        .$delete(`/api/items/${id}`)
+        .then((res) => {
+          this.fetchAll()
+          this.$message({
+            type: 'success',
+            message: `${target} : 削除が成功しました。`,
+            showClose: true,
+            duration: 5000
+          })
+        })
+        .catch((err) => {
+          this.$message({
+            type: 'danger',
+            message: `${target} : 削除に失敗しました。: ${err}`,
+            showClose: true,
+            duration: 0
+          })
+        })
     },
     registerItem(param) {
-      // ToDo: REST API登録処理呼び出し
-      // Dummiy insert
-      const item = { ...param }
-      this.tableData.push(item)
-      this.nextId++
-
-      const target = `${param.id}:${param.title}`
-      this.$message({
-        type: 'success',
-        message: `${target} : 登録が成功しました。`,
-        showClose: true,
-        duration: 5000
+      this.$axios({
+        url: `/api/items/`,
+        method: 'POST',
+        data: param
       })
+        .then((res) => {
+          this.fetchAll()
+          const target = `${res.data}:${param.title}`
+          this.$message({
+            type: 'success',
+            message: `${target} : 登録が成功しました。`,
+            showClose: true,
+            duration: 5000
+          })
+        })
+        .catch((err) => {
+          const target = `${param.title}`
+          this.$message({
+            type: 'danger',
+            message: `${target} : 登録に失敗しました。: ${err}`,
+            showClose: true,
+            duration: 0
+          })
+        })
     },
     confirmDelete() {
       const row = this.tableData[this.rowNumber]
@@ -235,12 +225,6 @@ export default {
       })
         .then(() => {
           this.deleteItem(row.id)
-          this.$message({
-            type: 'success',
-            message: `${target} : 削除が成功しました。`,
-            showClose: true,
-            duration: 5000
-          })
         })
         .catch(() => {
           this.$message({
