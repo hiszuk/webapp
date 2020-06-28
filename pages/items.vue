@@ -7,13 +7,16 @@
       <el-col :span="20">
         <!-- 検索入力 -->
         <el-row>
-          <el-col :span="20">
+          <el-col :span="18">
             <el-input v-model="search" size="small" placeholder="検索文字列を入力">
               <template slot="prepend">内容で絞り込む</template>
             </el-input>
           </el-col>
-          <el-col :span="4" style="text-align: center">
+          <el-col :span="6" style="text-align: right">
             <el-button type="success" icon="el-icon-circle-plus-outline" size="small" @click="handleNew()">新規登録</el-button>
+            <el-tooltip class="item" content="再読み込み" placement="top">
+              <el-button type="info" icon="el-icon-refresh-right" size="small" circle @click="fetchAll()"></el-button>
+            </el-tooltip>
           </el-col>
         </el-row>
         <!-- 表部分 -->
@@ -85,7 +88,7 @@ export default {
       formLabelWidth: '150px',
       dialogFormVisible: false,
       isUpdate: true,
-      rowNumber: '',
+      rowNumber: null,
       form: {
         id: null,
         title: '',
@@ -105,13 +108,13 @@ export default {
   methods: {
     handleEdit(index, row) {
       this.isUpdate = true
-      this.rowNumber = index
+      this.rowNumber = this.tableData.indexOf(row)
       this.fetchKey(row.id).then((res) => {
         this.dialogFormVisible = true
       })
     },
     handleDelete(index, row) {
-      this.rowNumber = index
+      this.rowNumber = this.tableData.indexOf(row)
       this.confirmDelete()
     },
     handleNew() {
@@ -133,12 +136,13 @@ export default {
     },
     async fetchAll() {
       await this.$axios.$get('/api/items/').then((res) => {
-        this.tableData = res
+        this.tableData = [...res]
       })
     },
     async fetchKey(id) {
       await this.$axios.$get(`/api/items/${id}`).then((res) => {
-        this.form = res
+        this.form = { ...res }
+        this.tableData[this.rowNumber] = { ...res }
       })
     },
     updateItem(param) {
@@ -149,12 +153,13 @@ export default {
         data: param
       })
         .then((res) => {
-          this.fetchAll()
-          this.$message({
-            type: 'success',
-            message: `${target} : 更新が成功しました。`,
-            showClose: true,
-            duration: 5000
+          this.fetchKey(param.id).then((response) => {
+            this.$message({
+              type: 'success',
+              message: `${target} : 更新が成功しました。`,
+              showClose: true,
+              duration: 5000
+            })
           })
         })
         .catch((err) => {
@@ -171,7 +176,7 @@ export default {
       this.$axios
         .$delete(`/api/items/${id}`)
         .then((res) => {
-          this.fetchAll()
+          this.tableData = this.tableData.filter((data) => data.id !== id)
           this.$message({
             type: 'success',
             message: `${target} : 削除が成功しました。`,
@@ -189,19 +194,21 @@ export default {
         })
     },
     registerItem(param) {
+      this.rowNumber = this.tableData.length
       this.$axios({
         url: `/api/items/`,
         method: 'POST',
         data: param
       })
         .then((res) => {
-          this.fetchAll()
-          const target = `${res.data}:${param.title}`
-          this.$message({
-            type: 'success',
-            message: `${target} : 登録が成功しました。`,
-            showClose: true,
-            duration: 5000
+          this.fetchKey(res.data).then((response) => {
+            const target = `${res.data}:${param.title}`
+            this.$message({
+              type: 'success',
+              message: `${target} : 登録が成功しました。`,
+              showClose: true,
+              duration: 5000
+            })
           })
         })
         .catch((err) => {
