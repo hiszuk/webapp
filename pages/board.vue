@@ -210,6 +210,7 @@ export default {
             showClose: true,
             duration: 5000
           })
+          this.classifyItems()
         })
         .catch((err) => {
           this.$message({
