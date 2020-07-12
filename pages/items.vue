@@ -194,7 +194,8 @@ export default {
         })
     },
     registerItem(param) {
-      this.rowNumber = this.tableData.length
+      this.tableData.push(param)
+      this.rowNumber = this.tableData.length - 1
       this.$axios({
         url: `/api/items/`,
         method: 'POST',
