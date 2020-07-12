@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <title>バックエンドと結合 解説</title>
+        <style>
+</style>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/katex.min.css" integrity="sha384-yFRtMMDnQtDRO8rLpMIKrtPCD5jdktao2TV19YiZYWMDkUR5GQZR/NOVTdquEx1j" crossorigin="anonymous">
+<link href="https://cdn.jsdelivr.net/npm/katex-copytex@latest/dist/katex-copytex.min.css" rel="stylesheet" type="text/css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/markdown.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/highlight.css">
+<style>
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe WPC', 'Segoe UI', system-ui, 'Ubuntu', 'Droid Sans', sans-serif;
+                font-size: 14px;
+                line-height: 1.6;
+            }
+        </style>
+        <style>
+.task-list-item { list-style-type: none; } .task-list-item-checkbox { margin-left: -20px; vertical-align: middle; }
+</style>
+        
+        <script src="https://cdn.jsdelivr.net/npm/katex-copytex@latest/dist/katex-copytex.min.js"></script>
+        
+    </head>
+    <body class="vscode-light">
+        <h1 id="バックエンドと結合-解説">バックエンドと結合 解説</h1>
+<ul>
+<li><a href="#%E3%83%90%E3%83%83%E3%82%AF%E3%82%A8%E3%83%B3%E3%83%89%E3%81%A8%E7%B5%90%E5%90%88-%E8%A7%A3%E8%AA%AC">バックエンドと結合 解説</a>
+<ul>
+<li><a href="#restful-api%E3%82%B5%E3%83%BC%E3%83%90%E3%83%BC%E8%A8%AD%E5%AE%9A">RESTful APIサーバー設定</a>
+<ul>
+<li><a href="#nuxtconfigjs%E3%81%AE%E5%A4%89%E6%9B%B4">nuxt.config.jsの変更</a></li>
+</ul>
+</li>
+<li><a href="#%E6%A4%9C%E7%B4%A2%E6%A9%9F%E8%83%BD%E3%81%AE%E5%AE%9F%E8%A3%85">検索機能の実装</a>
+<ul>
+<li><a href="#tabledata%E5%88%9D%E6%9C%9F%E5%80%A4%E5%89%8A%E9%99%A4">tableData初期値削除</a></li>
+<li><a href="#1%E4%BB%B6%E5%8F%96%E5%BE%97%E5%85%A8%E4%BB%B6%E5%8F%96%E5%BE%97%E3%81%AE%E5%AE%9F%E8%A3%85">1件取得・全件取得の実装</a></li>
+<li><a href="#%E5%88%9D%E6%9C%9F%E8%A1%A8%E7%A4%BA%E3%81%A7%E5%85%A8%E4%BB%B6%E5%8F%96%E5%BE%97%E3%81%97%E7%B5%90%E6%9E%9C%E3%82%92%E8%A1%A8%E7%A4%BA%E3%81%99%E3%82%8B">初期表示で全件取得し結果を表示する</a></li>
+<li><a href="#%E5%8B%95%E4%BD%9C%E7%A2%BA%E8%AA%8D">動作確認</a></li>
+</ul>
+</li>
+<li><a href="#%E6%9B%B4%E6%96%B0%E6%A9%9F%E8%83%BD%E3%81%AE%E5%AE%9F%E8%A3%85">更新機能の実装</a>
+<ul>
+<li><a href="#%E6%9B%B4%E6%96%B0updateitem%E3%81%AE%E4%BF%AE%E6%AD%A3">更新(<code>updateItem</code>)の修正</a></li>
+<li><a href="#%E6%9B%B4%E6%96%B0%E3%82%92%E3%82%B3%E3%83%BC%E3%83%AB%E3%81%99%E3%82%8B%E9%83%A8%E5%88%86handleedit%E3%81%AE%E4%BF%AE%E6%AD%A3">更新をコールする部分(<code>handleEdit</code>)の修正</a></li>
+<li><a href="#%E5%8B%95%E4%BD%9C%E7%A2%BA%E8%AA%8D-1">動作確認</a></li>
+</ul>
+</li>
+<li><a href="#%E5%89%8A%E9%99%A4%E6%A9%9F%E8%83%BD%E3%81%AE%E5%AE%9F%E8%A3%85">削除機能の実装</a>
+<ul>
+<li><a href="#%E5%89%8A%E9%99%A4deleteitem%E3%81%AE%E4%BF%AE%E6%AD%A3">削除(<code>deleteItem</code>)の修正</a></li>
+<li><a href="#%E3%83%A1%E3%83%83%E3%82%BB%E3%83%BC%E3%82%B8%E4%BD%8D%E7%BD%AE%E5%A4%89%E6%9B%B4">メッセージ位置変更</a></li>
+<li><a href="#%E5%89%8A%E9%99%A4%E3%82%92%E3%82%B3%E3%83%BC%E3%83%AB%E3%81%99%E3%82%8B%E9%83%A8%E5%88%86handledelete%E3%81%AE%E4%BF%AE%E6%AD%A3">削除をコールする部分(<code>handleDelete</code>)の修正</a></li>
+<li><a href="#%E5%8B%95%E4%BD%9C%E7%A2%BA%E8%AA%8D-2">動作確認</a></li>
+</ul>
+</li>
+<li><a href="#%E6%96%B0%E8%A6%8F%E7%99%BB%E9%8C%B2%E6%A9%9F%E8%83%BD%E3%81%AE%E5%AE%9F%E8%A3%85">新規登録機能の実装</a>
+<ul>
+<li><a href="#%E6%96%B0%E8%A6%8F%E7%99%BB%E9%8C%B2registeritem%E3%81%AE%E4%BF%AE%E6%AD%A3">新規登録(<code>registerItem</code>)の修正</a></li>
+<li><a href="#%E6%96%B0%E8%A6%8F%E7%99%BB%E9%8C%B2%E3%82%92%E3%82%B3%E3%83%BC%E3%83%AB%E3%81%99%E3%82%8B%E9%83%A8%E5%88%86handlenew%E3%81%AE%E4%BF%AE%E6%AD%A3">新規登録をコールする部分(<code>handleNew</code>)の修正</a></li>
+<li><a href="#%E5%8B%95%E4%BD%9C%E7%A2%BA%E8%AA%8D-3">動作確認</a></li>
+</ul>
+</li>
+<li><a href="#%E3%83%AA%E3%83%AD%E3%83%BC%E3%83%89%E3%83%9C%E3%82%BF%E3%83%B3%E8%BF%BD%E5%8A%A0%E3%81%A8%E4%B8%8D%E8%A6%81%E3%81%AA%E5%A4%89%E6%95%B0%E5%89%8A%E9%99%A4">リロードボタン追加と不要な変数削除</a>
+<ul>
+<li><a href="#%E6%96%B0%E8%A6%8F%E7%99%BB%E9%8C%B2%E3%83%9C%E3%82%BF%E3%83%B3%E3%81%AE%E5%8F%B3%E3%81%AB%E3%83%AA%E3%83%AD%E3%83%BC%E3%83%89%E3%83%9C%E3%82%BF%E3%83%B3%E3%82%92%E8%A8%AD%E7%BD%AE">新規登録ボタンの右にリロードボタンを設置</a></li>
+<li><a href="#%E5%A4%89%E6%95%B0%E5%89%8A%E9%99%A4">変数削除</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="restful-apiサーバー設定">RESTful APIサーバー設定</h2>
+<h3 id="nuxtconfigjsの変更">nuxt.config.jsの変更</h3>
+<p><code>nuxt.config.js</code>の<code>axios{}</code>にbaseURLを設定する</p>
+<p><strong>設定前</strong></p>
+<pre><code><code><div>  axios: {},
+</div></code></code></pre>
+<p><strong>設定後</strong></p>
+<pre><code><code><div>  axios: {
+    baseURL: process.env.API_URL || 'http://localhost:2000'
+  },
+</div></code></code></pre>
+<h2 id="検索機能の実装">検索機能の実装</h2>
+<h3 id="tabledata初期値削除">tableData初期値削除</h3>
+<p><code>tableData</code> の<code>[ ~ ]</code>内データを削除し初期値を空にする</p>
+<pre><code class="language-javascript"><div>  data() {
+    <span class="hljs-keyword">return</span> {
+      <span class="hljs-attr">tableData</span>: [],
+      :
+    }
+  },
+</div></code></pre>
+<h3 id="1件取得全件取得の実装">1件取得・全件取得の実装</h3>
+<p><code>fetchKey(id) { .. }</code>の内容をRESTAPIコールするように書き換える<br/>
+<code>fetchAll() { .. }</code>全件取得を実装する</p>
+<p><strong>変更前</strong></p>
+<pre><code class="language-javascript"><div>    fetchKey(id) {
+      <span class="hljs-comment">// ToDo: REST APIのkey(row.id)検索し結果をitemにセットする</span>
+      <span class="hljs-comment">// Dummy select</span>
+      <span class="hljs-keyword">const</span> items = <span class="hljs-keyword">this</span>.tableData.filter(<span class="hljs-function">(<span class="hljs-params">data</span>) =&gt;</span> data.id === id)
+      <span class="hljs-keyword">this</span>.item = { ...items[<span class="hljs-number">0</span>] }
+    },
+</div></code></pre>
+<p><strong>変更後</strong></p>
+<pre><code class="language-javascript"><div>    <span class="hljs-keyword">async</span> fetchAll() {
+      <span class="hljs-keyword">await</span> <span class="hljs-keyword">this</span>.$axios.$<span class="hljs-keyword">get</span>('/api/items/').then((res) =&gt; {
+        <span class="hljs-keyword">this</span>.tableData = [...res]
+      })
+    },
+    <span class="hljs-keyword">async</span> fetchKey(id) {
+      <span class="hljs-keyword">await</span> <span class="hljs-keyword">this</span>.$axios.$<span class="hljs-keyword">get</span>(`/api/items/${id}<span class="hljs-string">`).then((res) =&gt; {
+        this.form = { ...res }
+        this.tableData[this.rowNumber] = { ...res }
+      })
+    },
+</span></div></code></pre>
+<p><strong>解説</strong></p>
+<blockquote>
+<p><code>async ~ await:</code> 通常は非同期処理となるが、async～awaitを使うことで、時間がかかるAPIコールの結果を待って処理するようになる<br/>
+<code>this.$axios.$get(path):</code> baseURLに設定したサーバーに対してpathをGETする</br>
+<code>.then((res) =&gt; { .. }:</code> 実行結果を待ち、その結果を{}内で処理する</p>
+</blockquote>
+<h3 id="初期表示で全件取得し結果を表示する">初期表示で全件取得し結果を表示する</h3>
+<p>初期表示の際に全件取得し、結果を一覧表示するよう実装する</p>
+<p><code>conputed: { .. }</code> と <code>methods: { .. }</code> の間に <code>mounted() { .. }</code> を追加し、画面のレンダリングが完了したら一覧表示するように変更する。</p>
+<p><strong>変更前</strong></p>
+<pre><code class="language-javascript"><div>  computed: {
+    dialogTitle() {
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.isUpdate ? <span class="hljs-string">'ToDo 編集'</span> : <span class="hljs-string">'ToDo 新規登録'</span>
+    }
+  },
+  <span class="hljs-attr">methods</span>: {
+</div></code></pre>
+<p><strong>変更後</strong></p>
+<pre><code class="language-javascript"><div>  computed: {
+    dialogTitle() {
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.isUpdate ? <span class="hljs-string">'ToDo 編集'</span> : <span class="hljs-string">'ToDo 新規登録'</span>
+    }
+  },
+  mounted() {
+    <span class="hljs-keyword">this</span>.fetchAll()
+  },
+  <span class="hljs-attr">methods</span>: {
+</div></code></pre>
+<h3 id="動作確認">動作確認</h3>
+<p>まず、REST APIをポート2000番で起動しておくこと。</p>
+<pre><code class="language-cmd"><div><span class="hljs-built_in">cd</span> [RESTAPIディレクトリ]/build/libs
+java -jar webapi-<span class="hljs-number">0</span>.<span class="hljs-number">0</span>.<span class="hljs-number">1</span>-SNAPSHOT.jar
+</div></code></pre>
+<p>その後<br/>
+<code>yarn dev</code> し起動した後、<code>http://localhost:3000/items/</code> にアクセスする。</p>
+<p>一覧表示でDBの内容が表示されます。</p>
+<hr>
+<h2 id="更新機能の実装">更新機能の実装</h2>
+<h3 id="更新updateitemの修正">更新(<code>updateItem</code>)の修正</h3>
+<p><code>updateItem</code>をRESTAPIをコールし、結果により表示を変えるよう修正します。</p>
+<p><strong>変更前</strong></p>
+<pre><code class="language-javascript"><div>    updateItem(param) {
+      <span class="hljs-comment">// ToDo: REST APIのアップデートを起動する</span>
+      <span class="hljs-comment">// Dummy update</span>
+      <span class="hljs-keyword">this</span>.tableData[<span class="hljs-keyword">this</span>.rowNumber] = { ...param }
+
+      <span class="hljs-comment">// 更新後の情報を取得しtableDataにセットする</span>
+      <span class="hljs-keyword">this</span>.fetchKey(param.id)
+      <span class="hljs-keyword">this</span>.tableData[<span class="hljs-keyword">this</span>.rowNumber] = { ...this.item }
+
+      <span class="hljs-keyword">const</span> target = <span class="hljs-string">`<span class="hljs-subst">${param.id}</span>:<span class="hljs-subst">${param.title}</span>`</span>
+      <span class="hljs-keyword">this</span>.$message({
+        <span class="hljs-attr">type</span>: <span class="hljs-string">'success'</span>,
+        <span class="hljs-attr">message</span>: <span class="hljs-string">`<span class="hljs-subst">${target}</span> : 更新が成功しました。`</span>,
+        <span class="hljs-attr">showClose</span>: <span class="hljs-literal">true</span>,
+        <span class="hljs-attr">duration</span>: <span class="hljs-number">5000</span>
+      })
+    },
+</div></code></pre>
+<p><strong>変更後</strong></p>
+<pre><code class="language-javascript"><div>    updateItem(param) {
+      <span class="hljs-keyword">const</span> target = <span class="hljs-string">`<span class="hljs-subst">${param.id}</span>:<span class="hljs-subst">${param.title}</span>`</span>
+      <span class="hljs-keyword">this</span>.$axios({
+        <span class="hljs-attr">url</span>: <span class="hljs-string">`/api/items/<span class="hljs-subst">${param.id}</span>`</span>,
+        <span class="hljs-attr">method</span>: <span class="hljs-string">'PUT'</span>,
+        <span class="hljs-attr">data</span>: param
+      })
+        .then(<span class="hljs-function">(<span class="hljs-params">res</span>) =&gt;</span> {
+          <span class="hljs-keyword">this</span>.fetchKey(param.id).then(<span class="hljs-function">(<span class="hljs-params">response</span>) =&gt;</span> {
+            <span class="hljs-keyword">this</span>.$message({
+              <span class="hljs-attr">type</span>: <span class="hljs-string">'success'</span>,
+              <span class="hljs-attr">message</span>: <span class="hljs-string">`<span class="hljs-subst">${target}</span> : 更新が成功しました。`</span>,
+              <span class="hljs-attr">showClose</span>: <span class="hljs-literal">true</span>,
+              <span class="hljs-attr">duration</span>: <span class="hljs-number">5000</span>
+            })
+          })
+        })
+        .catch(<span class="hljs-function">(<span class="hljs-params">err</span>) =&gt;</span> {
+          <span class="hljs-keyword">this</span>.$message({
+            <span class="hljs-attr">type</span>: <span class="hljs-string">'danger'</span>,
+            <span class="hljs-attr">message</span>: <span class="hljs-string">`<span class="hljs-subst">${target}</span> : 更新に失敗しました。: <span class="hljs-subst">${err}</span>`</span>,
+            <span class="hljs-attr">showClose</span>: <span class="hljs-literal">true</span>,
+            <span class="hljs-attr">duration</span>: <span class="hljs-number">0</span>
+          })
+        })
+    },
+</div></code></pre>
+<p><strong>解説</strong></p>
+<blockquote>
+<p><code>this.$axios({..}):</code> PUTやPOSTでリクエストボディにデータセットが必要な場合は{}内にパラメータを記載する<br/>
+<code>.catch((err) =&gt; {..}):</code> HTTPレスポンスで200番以外が返却された場合、このブロックが実行される<br/></p>
+</blockquote>
+<h3 id="更新をコールする部分handleeditの修正">更新をコールする部分(<code>handleEdit</code>)の修正</h3>
+<p>不具合の修正とformへのデータセットをfetchKey内で行うように変更する</p>
+<p><strong>変更前</strong></p>
+<pre><code class="language-javascript"><div>    handleEdit(index, row) {
+      <span class="hljs-keyword">this</span>.isUpdate = <span class="hljs-literal">true</span>
+      <span class="hljs-keyword">this</span>.rowNumber = index
+      <span class="hljs-keyword">this</span>.fetchKey(row.id)
+      <span class="hljs-keyword">this</span>.form = { ...this.item }
+      <span class="hljs-keyword">this</span>.dialogFormVisible = <span class="hljs-literal">true</span>
+    },
+</div></code></pre>
+<p><strong>変更後</strong></p>
+<pre><code class="language-javascript"><div>    handleEdit(index, row) {
+      <span class="hljs-keyword">this</span>.isUpdate = <span class="hljs-literal">true</span>
+      <span class="hljs-keyword">this</span>.rowNumber = <span class="hljs-keyword">this</span>.tableData.indexOf(row)
+      <span class="hljs-keyword">this</span>.fetchKey(row.id).then(<span class="hljs-function">(<span class="hljs-params">res</span>) =&gt;</span> {
+        <span class="hljs-keyword">this</span>.dialogFormVisible = <span class="hljs-literal">true</span>
+      })
+    },
+</div></code></pre>
+<h3 id="動作確認-1">動作確認</h3>
+<p>一覧から編集ボタンをクリックし、内容変更後確定ボタンクリックすることで変更内容が反映されます。</p>
+<hr>
+<h2 id="削除機能の実装">削除機能の実装</h2>
+<h3 id="削除deleteitemの修正">削除(<code>deleteItem</code>)の修正</h3>
+<p><code>deleteItem</code>をRESTAPIをコールし、結果により表示を変えるよう修正します。<br/>
+削除成功メッセージの位置も削除結果により表示するように変更します。</p>
+<p><strong>変更前</strong></p>
+<pre><code class="language-javascript"><div>    deleteItem(id) {
+      <span class="hljs-comment">// ToDo: REST API削除処理呼び出し</span>
+      <span class="hljs-comment">// Dummy delete</span>
+      <span class="hljs-keyword">this</span>.tableData = <span class="hljs-keyword">this</span>.tableData.filter(<span class="hljs-function">(<span class="hljs-params">data</span>) =&gt;</span> data.id !== id)
+    },
+</div></code></pre>
+<p><strong>変更後</strong></p>
+<pre><code class="language-javascript"><div>    deleteItem(id) {
+      <span class="hljs-keyword">const</span> target = <span class="hljs-string">`<span class="hljs-subst">${id}</span>`</span>
+      <span class="hljs-keyword">this</span>.$axios
+        .$<span class="hljs-keyword">delete</span>(<span class="hljs-string">`/api/items/<span class="hljs-subst">${id}</span>`</span>)
+        .then(<span class="hljs-function">(<span class="hljs-params">res</span>) =&gt;</span> {
+          <span class="hljs-keyword">this</span>.tableData = <span class="hljs-keyword">this</span>.tableData.filter(<span class="hljs-function">(<span class="hljs-params">data</span>) =&gt;</span> data.id !== id)
+          <span class="hljs-keyword">this</span>.$message({
+            <span class="hljs-attr">type</span>: <span class="hljs-string">'success'</span>,
+            <span class="hljs-attr">message</span>: <span class="hljs-string">`<span class="hljs-subst">${target}</span> : 削除が成功しました。`</span>,
+            <span class="hljs-attr">showClose</span>: <span class="hljs-literal">true</span>,
+            <span class="hljs-attr">duration</span>: <span class="hljs-number">5000</span>
+          })
+        })
+        .catch(<span class="hljs-function">(<span class="hljs-params">err</span>) =&gt;</span> {
+          <span class="hljs-keyword">this</span>.$message({
+            <span class="hljs-attr">type</span>: <span class="hljs-string">'danger'</span>,
+            <span class="hljs-attr">message</span>: <span class="hljs-string">`<span class="hljs-subst">${target}</span> : 削除に失敗しました。: <span class="hljs-subst">${err}</span>`</span>,
+            <span class="hljs-attr">showClose</span>: <span class="hljs-literal">true</span>,
+            <span class="hljs-attr">duration</span>: <span class="hljs-number">0</span>
+          })
+        })
+    },
+</div></code></pre>
+<h3 id="メッセージ位置変更">メッセージ位置変更</h3>
+<p><strong>変更前</strong></p>
+<pre><code class="language-javascript"><div>    confirmDelete() {
+      <span class="hljs-keyword">const</span> row = <span class="hljs-keyword">this</span>.tableData[<span class="hljs-keyword">this</span>.rowNumber]
+      <span class="hljs-keyword">const</span> target = <span class="hljs-string">`<span class="hljs-subst">${row.id}</span>:<span class="hljs-subst">${row.title}</span>`</span>
+      <span class="hljs-keyword">const</span> msg = <span class="hljs-string">`<span class="hljs-subst">${target}</span> を削除します。削除後は元に戻せませんが、実行してよろしいですか?`</span>
+      <span class="hljs-keyword">this</span>.$confirm(msg, <span class="hljs-string">'Warning'</span>, {
+        <span class="hljs-attr">confirmButtonText</span>: <span class="hljs-string">'削除する'</span>,
+        <span class="hljs-attr">cancelButtonText</span>: <span class="hljs-string">'やめる'</span>,
+        <span class="hljs-attr">type</span>: <span class="hljs-string">'warning'</span>
+      })
+        .then(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+          <span class="hljs-keyword">this</span>.deleteItem(row.id)
+          <span class="hljs-keyword">this</span>.$message({
+            <span class="hljs-attr">type</span>: <span class="hljs-string">'success'</span>,
+            <span class="hljs-attr">message</span>: <span class="hljs-string">`<span class="hljs-subst">${target}</span> : 削除が成功しました。`</span>,
+            <span class="hljs-attr">showClose</span>: <span class="hljs-literal">true</span>,
+            <span class="hljs-attr">duration</span>: <span class="hljs-number">5000</span>
+          })
+        })
+        .catch(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+          <span class="hljs-keyword">this</span>.$message({
+            <span class="hljs-attr">type</span>: <span class="hljs-string">'info'</span>,
+            <span class="hljs-attr">message</span>: <span class="hljs-string">'削除を中止しました。'</span>
+          })
+        })
+    }
+</div></code></pre>
+<p><strong>変更後</strong></p>
+<pre><code class="language-javascript"><div>    confirmDelete() {
+      <span class="hljs-keyword">const</span> row = <span class="hljs-keyword">this</span>.tableData[<span class="hljs-keyword">this</span>.rowNumber]
+      <span class="hljs-keyword">const</span> target = <span class="hljs-string">`<span class="hljs-subst">${row.id}</span>:<span class="hljs-subst">${row.title}</span>`</span>
+      <span class="hljs-keyword">const</span> msg = <span class="hljs-string">`<span class="hljs-subst">${target}</span> を削除します。削除後は元に戻せませんが、実行してよろしいですか?`</span>
+      <span class="hljs-keyword">this</span>.$confirm(msg, <span class="hljs-string">'Warning'</span>, {
+        <span class="hljs-attr">confirmButtonText</span>: <span class="hljs-string">'削除する'</span>,
+        <span class="hljs-attr">cancelButtonText</span>: <span class="hljs-string">'やめる'</span>,
+        <span class="hljs-attr">type</span>: <span class="hljs-string">'warning'</span>
+      })
+        .then(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+          <span class="hljs-keyword">this</span>.deleteItem(row.id)
+        })
+        .catch(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+          <span class="hljs-keyword">this</span>.$message({
+            <span class="hljs-attr">type</span>: <span class="hljs-string">'info'</span>,
+            <span class="hljs-attr">message</span>: <span class="hljs-string">'削除を中止しました。'</span>
+          })
+        })
+    }
+</div></code></pre>
+<h3 id="削除をコールする部分handledeleteの修正">削除をコールする部分(<code>handleDelete</code>)の修正</h3>
+<p>不具合の修正</p>
+<p><strong>変更前</strong></p>
+<pre><code class="language-javascript"><div>    handleDelete(index, row) {
+      <span class="hljs-keyword">this</span>.rowNumber = index
+      <span class="hljs-keyword">this</span>.confirmDelete()
+    },
+</div></code></pre>
+<p><strong>変更後</strong></p>
+<pre><code class="language-javascript"><div>    handleDelete(index, row) {
+      <span class="hljs-keyword">this</span>.rowNumber = <span class="hljs-keyword">this</span>.tableData.indexOf(row)
+      <span class="hljs-keyword">this</span>.confirmDelete()
+    },
+</div></code></pre>
+<h3 id="動作確認-2">動作確認</h3>
+<p>一覧から削除ボタンをクリックし、削除確定ボタンクリックすることで削除内容が反映されます。</p>
+<hr>
+<h2 id="新規登録機能の実装">新規登録機能の実装</h2>
+<h3 id="新規登録registeritemの修正">新規登録(<code>registerItem</code>)の修正</h3>
+<p><code>registerItem</code>をRESTAPIをコールし、結果により表示を変えるよう修正します。</p>
+<p><strong>変更前</strong></p>
+<pre><code class="language-javascript"><div>    registerItem(param) {
+      <span class="hljs-comment">// ToDo: REST API登録処理呼び出し</span>
+      <span class="hljs-comment">// Dummiy insert</span>
+      <span class="hljs-keyword">const</span> item = { ...param }
+      <span class="hljs-keyword">this</span>.tableData.push(item)
+      <span class="hljs-keyword">this</span>.nextId++
+
+      <span class="hljs-keyword">const</span> target = <span class="hljs-string">`<span class="hljs-subst">${param.id}</span>:<span class="hljs-subst">${param.title}</span>`</span>
+      <span class="hljs-keyword">this</span>.$message({
+        <span class="hljs-attr">type</span>: <span class="hljs-string">'success'</span>,
+        <span class="hljs-attr">message</span>: <span class="hljs-string">`<span class="hljs-subst">${target}</span> : 登録が成功しました。`</span>,
+        <span class="hljs-attr">showClose</span>: <span class="hljs-literal">true</span>,
+        <span class="hljs-attr">duration</span>: <span class="hljs-number">5000</span>
+      })
+    },
+</div></code></pre>
+<p><strong>変更後</strong></p>
+<pre><code class="language-javascript"><div>    registerItem(param) {
+      <span class="hljs-keyword">this</span>.tableData.push(param)
+      <span class="hljs-keyword">this</span>.rowNumber = <span class="hljs-keyword">this</span>.tableData.length - <span class="hljs-number">1</span>
+      <span class="hljs-keyword">this</span>.$axios({
+        <span class="hljs-attr">url</span>: <span class="hljs-string">`/api/items/`</span>,
+        <span class="hljs-attr">method</span>: <span class="hljs-string">'POST'</span>,
+        <span class="hljs-attr">data</span>: param
+      })
+        .then(<span class="hljs-function">(<span class="hljs-params">res</span>) =&gt;</span> {
+          <span class="hljs-keyword">this</span>.fetchKey(res.data).then(<span class="hljs-function">(<span class="hljs-params">response</span>) =&gt;</span> {
+            <span class="hljs-keyword">const</span> target = <span class="hljs-string">`<span class="hljs-subst">${res.data}</span>:<span class="hljs-subst">${param.title}</span>`</span>
+            <span class="hljs-keyword">this</span>.$message({
+              <span class="hljs-attr">type</span>: <span class="hljs-string">'success'</span>,
+              <span class="hljs-attr">message</span>: <span class="hljs-string">`<span class="hljs-subst">${target}</span> : 登録が成功しました。`</span>,
+              <span class="hljs-attr">showClose</span>: <span class="hljs-literal">true</span>,
+              <span class="hljs-attr">duration</span>: <span class="hljs-number">5000</span>
+            })
+          })
+        })
+        .catch(<span class="hljs-function">(<span class="hljs-params">err</span>) =&gt;</span> {
+          <span class="hljs-keyword">const</span> target = <span class="hljs-string">`<span class="hljs-subst">${param.title}</span>`</span>
+          <span class="hljs-keyword">this</span>.$message({
+            <span class="hljs-attr">type</span>: <span class="hljs-string">'danger'</span>,
+            <span class="hljs-attr">message</span>: <span class="hljs-string">`<span class="hljs-subst">${target}</span> : 登録に失敗しました。: <span class="hljs-subst">${err}</span>`</span>,
+            <span class="hljs-attr">showClose</span>: <span class="hljs-literal">true</span>,
+            <span class="hljs-attr">duration</span>: <span class="hljs-number">0</span>
+          })
+        })
+    },
+</div></code></pre>
+<p><strong>解説</strong></p>
+<blockquote>
+<p><code>this.tableData.push(param):</code> tableDataに1行追加<br/>
+<code>this.rowNumber = this.tableData.length-1:</code> fetchKeyの結果を移送するIndexをセット<br/>
+<code>this.fetchKey(res.data):</code> 登録の返却値(id) <code>res.data</code> を使い再度データを検索し先ほど追加したレコードに移送する<br/></p>
+</blockquote>
+<h3 id="新規登録をコールする部分handlenewの修正">新規登録をコールする部分(<code>handleNew</code>)の修正</h3>
+<p>ダミー処理の削除</p>
+<p><strong>変更前</strong></p>
+<pre><code class="language-javascript"><div>    handleNew() {
+      <span class="hljs-keyword">this</span>.isUpdate = <span class="hljs-literal">false</span>
+      <span class="hljs-keyword">this</span>.form.id = <span class="hljs-literal">null</span>
+      <span class="hljs-keyword">this</span>.form.title = <span class="hljs-string">''</span>
+      <span class="hljs-keyword">this</span>.form.content = <span class="hljs-string">''</span>
+      <span class="hljs-keyword">this</span>.form.status = <span class="hljs-string">'TODO'</span>
+      <span class="hljs-keyword">this</span>.dialogFormVisible = <span class="hljs-literal">true</span>
+      <span class="hljs-comment">// 以下はREST APIと接続するまでのダミー処理</span>
+      <span class="hljs-comment">// idはREST APIでは自動採番の予定</span>
+      <span class="hljs-keyword">this</span>.form.id = <span class="hljs-keyword">this</span>.nextId
+    },
+</div></code></pre>
+<p><strong>変更後</strong></p>
+<pre><code class="language-javascript"><div>    handleNew() {
+      <span class="hljs-keyword">this</span>.isUpdate = <span class="hljs-literal">false</span>
+      <span class="hljs-keyword">this</span>.form.id = <span class="hljs-literal">null</span>
+      <span class="hljs-keyword">this</span>.form.title = <span class="hljs-string">''</span>
+      <span class="hljs-keyword">this</span>.form.content = <span class="hljs-string">''</span>
+      <span class="hljs-keyword">this</span>.form.status = <span class="hljs-string">'TODO'</span>
+      <span class="hljs-keyword">this</span>.dialogFormVisible = <span class="hljs-literal">true</span>
+    },
+</div></code></pre>
+<h3 id="動作確認-3">動作確認</h3>
+<p>新規登録ボタンをクリックし、登録ダイアログを開き、新規データを入力しDBに登録されることを確認する。</p>
+<hr>
+<h2 id="リロードボタン追加と不要な変数削除">リロードボタン追加と不要な変数削除</h2>
+<h3 id="新規登録ボタンの右にリロードボタンを設置">新規登録ボタンの右にリロードボタンを設置</h3>
+<p><strong>変更前</strong></p>
+<pre><code class="language-html"><div>        <span class="hljs-comment">&lt;!-- 検索入力 --&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">el-row</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-name">el-col</span> <span class="hljs-attr">:span</span>=<span class="hljs-string">"20"</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">el-input</span> <span class="hljs-attr">v-model</span>=<span class="hljs-string">"search"</span> <span class="hljs-attr">size</span>=<span class="hljs-string">"small"</span> <span class="hljs-attr">placeholder</span>=<span class="hljs-string">"検索文字列を入力"</span>&gt;</span>
+              <span class="hljs-tag">&lt;<span class="hljs-name">template</span> <span class="hljs-attr">slot</span>=<span class="hljs-string">"prepend"</span>&gt;</span>内容で絞り込む<span class="hljs-tag">&lt;/<span class="hljs-name">template</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-name">el-input</span>&gt;</span>
+          <span class="hljs-tag">&lt;/<span class="hljs-name">el-col</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-name">el-col</span> <span class="hljs-attr">:span</span>=<span class="hljs-string">"4"</span> <span class="hljs-attr">style</span>=<span class="hljs-string">"text-align: center"</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">el-button</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"success"</span> <span class="hljs-attr">icon</span>=<span class="hljs-string">"el-icon-circle-plus-outline"</span> <span class="hljs-attr">size</span>=<span class="hljs-string">"small"</span> @<span class="hljs-attr">click</span>=<span class="hljs-string">"handleNew()"</span>&gt;</span>新規登録<span class="hljs-tag">&lt;/<span class="hljs-name">el-button</span>&gt;</span>
+          <span class="hljs-tag">&lt;/<span class="hljs-name">el-col</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">el-row</span>&gt;</span>
+        <span class="hljs-comment">&lt;!-- 表部分 --&gt;</span>
+</div></code></pre>
+<p><strong>変更後</strong></p>
+<pre><code class="language-html"><div>        <span class="hljs-comment">&lt;!-- 検索入力 --&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">el-row</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-name">el-col</span> <span class="hljs-attr">:span</span>=<span class="hljs-string">"18"</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">el-input</span> <span class="hljs-attr">v-model</span>=<span class="hljs-string">"search"</span> <span class="hljs-attr">size</span>=<span class="hljs-string">"small"</span> <span class="hljs-attr">placeholder</span>=<span class="hljs-string">"検索文字列を入力"</span>&gt;</span>
+              <span class="hljs-tag">&lt;<span class="hljs-name">template</span> <span class="hljs-attr">slot</span>=<span class="hljs-string">"prepend"</span>&gt;</span>内容で絞り込む<span class="hljs-tag">&lt;/<span class="hljs-name">template</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-name">el-input</span>&gt;</span>
+          <span class="hljs-tag">&lt;/<span class="hljs-name">el-col</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-name">el-col</span> <span class="hljs-attr">:span</span>=<span class="hljs-string">"6"</span> <span class="hljs-attr">style</span>=<span class="hljs-string">"text-align: right"</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">el-button</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"success"</span> <span class="hljs-attr">icon</span>=<span class="hljs-string">"el-icon-circle-plus-outline"</span> <span class="hljs-attr">size</span>=<span class="hljs-string">"small"</span> @<span class="hljs-attr">click</span>=<span class="hljs-string">"handleNew()"</span>&gt;</span>新規登録<span class="hljs-tag">&lt;/<span class="hljs-name">el-button</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">el-tooltip</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"item"</span> <span class="hljs-attr">content</span>=<span class="hljs-string">"再読み込み"</span> <span class="hljs-attr">placement</span>=<span class="hljs-string">"top"</span>&gt;</span>
+              <span class="hljs-tag">&lt;<span class="hljs-name">el-button</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"info"</span> <span class="hljs-attr">icon</span>=<span class="hljs-string">"el-icon-refresh-right"</span> <span class="hljs-attr">size</span>=<span class="hljs-string">"small"</span> <span class="hljs-attr">circle</span> @<span class="hljs-attr">click</span>=<span class="hljs-string">"fetchAll()"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">el-button</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-name">el-tooltip</span>&gt;</span>
+          <span class="hljs-tag">&lt;/<span class="hljs-name">el-col</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">el-row</span>&gt;</span>
+        <span class="hljs-comment">&lt;!-- 表部分 --&gt;</span>
+</div></code></pre>
+<h3 id="変数削除">変数削除</h3>
+<p><code>data() { ~ }</code> 内にある <code>item: { }</code> と <code>nextId: 8</code> は不要なので削除する。</p>
+
+    </body>
+    </html>
