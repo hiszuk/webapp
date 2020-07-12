@@ -3,6 +3,7 @@
     <el-menu :default-active="activeIndex" mode="horizontal" router>
       <el-menu-item index="/">About</el-menu-item>
       <el-menu-item index="/items">Items</el-menu-item>
+      <el-menu-item index="/board">Board</el-menu-item>
     </el-menu>
     <nuxt />
   </div>
