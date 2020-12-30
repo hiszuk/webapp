@@ -152,13 +152,13 @@ export default {
   methods: {
     handleEdit(index, row) {
       this.isUpdate = true
-      this.rowNumber = index
+      this.rowNumber = this.tableData.indexOf(row)
       this.fetchKey(row.id)
       this.form = { ...this.item }
       this.dialogFormVisible = true
     },
     handleDelete(index, row) {
-      this.rowNumber = index
+      this.rowNumber = this.tableData.indexOf(row)
       this.confirmDelete()
     },
     handleNew() {
